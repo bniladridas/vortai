@@ -17,7 +17,6 @@ function App() {
       <main className="main-content">
         <section className="title-section">
           <h1>Vortai</h1>
-          <p>Advanced AI platform with web search, text generation, and creative tools</p>
         </section>
 
         <SearchInterface

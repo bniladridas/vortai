@@ -9,18 +9,11 @@ const ResponseContainer: React.FC<ResponseContainerProps> = ({ content }) => {
 
   return (
     <div className="response-container">
-      <h3 style={{
-        margin: '0 0 1rem 0',
-        fontSize: '1.125rem',
-        fontWeight: '600',
-        color: 'var(--primary)'
-      }}>
-        🤖 Response
-      </h3>
       <div
         style={{
-          lineHeight: '1.7',
-          color: 'var(--text-secondary)'
+          lineHeight: '1.6',
+          color: 'var(--text)',
+          fontSize: '1rem'
         }}
         dangerouslySetInnerHTML={{ __html: content }}
       />
