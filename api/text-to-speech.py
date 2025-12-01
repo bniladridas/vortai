@@ -55,7 +55,7 @@ def handler(event, context):
         # Clean up the file
         try:
             os.remove(filepath)
-        except:
+        except OSError:
             pass
 
         return {
