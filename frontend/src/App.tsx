@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Header from './components/Header';
 import SearchInterface from './components/SearchInterface';
 import ResponseContainer from './components/ResponseContainer';
 import ThinkingContainer from './components/ThinkingContainer';
@@ -15,8 +14,6 @@ function App() {
 
   return (
     <div className="app-container">
-      <Header />
-
       <main className="main-content">
         <section className="title-section">
           <h1>Vortai</h1>

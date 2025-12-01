@@ -38,22 +38,10 @@ body {
   background: var(--background);
 }
 
-.header {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 1rem 2rem;
-  background: var(--background);
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-
 .main-content {
   max-width: 72rem;
   margin: 0 auto;
-  padding: 1rem 2rem 4rem;
+  padding: 2rem;
 }
 
 .title-section {
