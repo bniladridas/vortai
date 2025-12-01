@@ -11,10 +11,10 @@ load_dotenv()
 ai = GeminiAI()
 
 
-def generate_image():
+def handler(request):
     """Generate image from text prompt."""
     try:
-        data = request.json
+        data = request.get_json()
         prompt = data.get("prompt", "").strip()
 
         if not prompt:

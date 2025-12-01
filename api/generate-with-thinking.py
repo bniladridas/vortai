@@ -8,10 +8,10 @@ load_dotenv()
 ai = GeminiAI()
 
 
-def generate_with_thinking():
+def handler(request):
     """Generate text response with thinking."""
     try:
-        data = request.json
+        data = request.get_json()
         prompt = data.get("prompt", "").strip()
 
         if not prompt:

@@ -10,10 +10,10 @@ load_dotenv()
 ai = GeminiAI()
 
 
-def text_to_speech():
+def handler(request):
     """Convert text to speech."""
     try:
-        data = request.json
+        data = request.get_json()
         text = data.get("text", "").strip()
 
         if not text:
