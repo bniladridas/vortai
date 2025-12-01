@@ -1,4 +1,4 @@
-from flask import send_file, jsonify, request
+from flask import send_file, jsonify
 import os
 import tempfile
 from dotenv import load_dotenv

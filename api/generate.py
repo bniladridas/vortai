@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import jsonify
 from dotenv import load_dotenv
 from vortai import GeminiAI
 
