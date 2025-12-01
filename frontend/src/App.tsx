@@ -15,10 +15,6 @@ function App() {
   return (
     <div className="app-container">
       <main className="main-content">
-        <section className="title-section">
-          <h1>Vortai</h1>
-        </section>
-
         <SearchInterface
           onResponse={setResponse}
           onThinking={setThinking}
@@ -30,12 +26,9 @@ function App() {
 
         {thinking && <ThinkingContainer content={thinking} />}
 
-        {(response || audioUrl) && (
-          <div className="media-controls">
-            <TTSButton text={response} onAudio={setAudioUrl} />
-            <AudioPlayer src={audioUrl} />
-          </div>
-        )}
+        {response && <TTSButton text={response} onAudio={setAudioUrl} />}
+
+        {audioUrl && <AudioPlayer src={audioUrl} />}
 
         {imageUrl && <ImageContainer imageUrl={imageUrl} />}
       </main>
