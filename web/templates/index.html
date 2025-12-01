@@ -39,7 +39,8 @@
         </div>
         <div class="header-controls">
             <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Sun icon (dark theme) -->
+                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="12" cy="12" r="5" stroke="currentColor"/>
                     <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor"/>
                     <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor"/>
@@ -49,6 +50,10 @@
                     <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor"/>
                     <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor"/>
                     <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor"/>
+                </svg>
+                <!-- Moon icon (light theme) -->
+                <svg class="moon-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor"/>
                 </svg>
             </button>
             <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">
@@ -75,7 +80,7 @@
                             <path d="m21 21-4.35-4.35" stroke="currentColor"/>
                         </svg>
                     </div>
-                    <textarea class="unified-input" placeholder="Ask package Chat or @mention an agent" rows="1"></textarea>
+                    <textarea class="unified-input" placeholder="Ask anything..." rows="1"></textarea>
                     <div class="search-actions">
                         <button class="clear-button" id="clear-button" style="display: none;">
                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -90,6 +95,27 @@
                             </svg>
                         </button>
                     </div>
+                </div>
+                <div class="input-suggestions" id="input-suggestions">
+                    <!-- Canvas suggestions (3) -->
+                    <div class="suggestion-chip tab-canvas" data-text="Explain quantum computing in simple terms">Explain quantum computing</div>
+                    <div class="suggestion-chip tab-canvas" data-text="Write a Python function to reverse a string">Write a Python function</div>
+                    <div class="suggestion-chip tab-canvas" data-text="Create a recipe for chocolate chip cookies">Chocolate chip cookie recipe</div>
+
+                    <!-- AI Thinking suggestions (3) -->
+                    <div class="suggestion-chip tab-thinking" data-text="Solve this step by step: If a train travels at 60 mph for 2 hours, how far does it go?">Solve step by step: train distance</div>
+                    <div class="suggestion-chip tab-thinking" data-text="Explain the water cycle with detailed reasoning">Explain water cycle with reasoning</div>
+                    <div class="suggestion-chip tab-thinking" data-text="Calculate compound interest: $1000 at 5% for 3 years">Calculate compound interest</div>
+
+                    <!-- Web search suggestions (3) -->
+                    <div class="suggestion-chip tab-url" data-text="Search https://en.wikipedia.org for information about quantum physics">Search Wikipedia: quantum physics</div>
+                    <div class="suggestion-chip tab-url" data-text="Find latest AI news from https://techcrunch.com and https://www.theverge.com">Latest AI news from tech sites</div>
+                    <div class="suggestion-chip tab-url" data-text="Check https://github.com for popular Python repositories this month">Popular Python repos on GitHub</div>
+
+                    <!-- Image generation suggestions (3) -->
+                    <div class="suggestion-chip tab-image" data-text="A beautiful sunset over mountains with vibrant colors">Beautiful sunset over mountains</div>
+                    <div class="suggestion-chip tab-image" data-text="A futuristic city with flying cars and neon lights">Futuristic city with flying cars</div>
+                    <div class="suggestion-chip tab-image" data-text="A cute cartoon robot with big eyes and a friendly smile">Cute cartoon robot</div>
                 </div>
                 <div class="search-tabs">
                     <button class="search-tab active" data-mode="text" data-style="normal">

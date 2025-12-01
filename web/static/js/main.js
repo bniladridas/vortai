@@ -141,6 +141,10 @@ function animateText(element) {
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
     setupUnifiedSearchHandlers();
+    setupThemeToggle();
+    setupMenuToggle();
+    // Initialize suggestions visibility
+    updateSuggestionsVisibility();
     // Add other setup functions as needed
 });
 // Setup unified search handlers
@@ -148,6 +152,20 @@ function setupUnifiedSearchHandlers() {
     const input = document.querySelector('.unified-input');
     const submitButton = document.getElementById('submit-button');
     const clearButton = document.getElementById('clear-button');
+    const searchTabs = document.querySelectorAll('.search-tab');
+
+    // Handle search tab clicks
+    searchTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Remove active class from all tabs
+            searchTabs.forEach(t => t.classList.remove('active'));
+            // Add active class to clicked tab
+            this.classList.add('active');
+            // Update suggestions visibility
+            updateSuggestionsVisibility();
+        });
+    });
+
     // Handle submit button click
     submitButton.addEventListener('click', handleUnifiedSearch);
     // Handle clear button click
@@ -164,26 +182,237 @@ function setupUnifiedSearchHandlers() {
             handleUnifiedSearch();
         }
     });
-    // Show/hide clear button based on input content
+    // Show/hide clear button and suggestions based on input content
     input.addEventListener('input', function () {
-        clearButton.style.display = input.value.trim() ? 'block' : 'none';
+        const hasContent = input.value.trim();
+        clearButton.style.display = hasContent ? 'block' : 'none';
+        updateSuggestionsVisibility();
         // Auto-resize textarea
         input.style.height = 'auto';
         input.style.height = Math.min(input.scrollHeight, 120) + 'px';
     });
+
+    // Handle suggestion chip clicks
+    const suggestionChips = document.querySelectorAll('.suggestion-chip');
+    suggestionChips.forEach(chip => {
+        chip.addEventListener('click', function() {
+            input.value = this.dataset.text;
+            input.focus();
+            // Trigger input event to hide suggestions and show clear button
+            input.dispatchEvent(new Event('input'));
+        });
+    });
     // Auto-focus on input
     input.focus();
 }
+
+// Setup menu toggle functionality
+function setupMenuToggle() {
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebarMenu = document.getElementById('sidebar-menu');
+    const menuOverlay = document.getElementById('menu-overlay');
+    const closeMenu = document.getElementById('close-menu');
+
+    // Function to open menu
+    function openMenu() {
+        sidebarMenu.classList.add('open');
+        menuOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent body scroll
+    }
+
+    // Function to close menu
+    function closeMenuFunc() {
+        sidebarMenu.classList.remove('open');
+        menuOverlay.classList.remove('active');
+        document.body.style.overflow = ''; // Restore body scroll
+    }
+
+    // Menu toggle button click
+    menuToggle.addEventListener('click', openMenu);
+
+    // Close menu button click
+    closeMenu.addEventListener('click', closeMenuFunc);
+
+    // Overlay click to close
+    menuOverlay.addEventListener('click', closeMenuFunc);
+
+    // Close menu on Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && sidebarMenu.classList.contains('open')) {
+            closeMenuFunc();
+        }
+    });
+}
+
+// Setup theme toggle functionality
+function setupThemeToggle() {
+    const themeToggle = document.getElementById('theme-toggle');
+
+    // Load saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+
+    // Handle theme toggle click
+    themeToggle.addEventListener('click', function() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'light') {
+            // Switch to dark theme
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            // Switch to light theme
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+}
+
+// Update suggestions visibility based on active tab and input content
+function updateSuggestionsVisibility() {
+    const input = document.querySelector('.unified-input');
+    const hasContent = input.value.trim();
+    const suggestions = document.getElementById('input-suggestions');
+    const activeTab = document.querySelector('.search-tab.active');
+
+    if (hasContent) {
+        suggestions.style.display = 'none';
+        return;
+    }
+
+    // Show suggestions container
+    suggestions.style.display = 'flex';
+
+    // Get active tab style
+    const tabStyle = activeTab.dataset.style || 'normal';
+    const tabMode = activeTab.dataset.mode || 'text';
+
+    // Hide all suggestion chips first
+    const allChips = document.querySelectorAll('.suggestion-chip');
+    allChips.forEach(chip => chip.style.display = 'none');
+
+    // Show chips for current tab
+    let chipsToShow;
+    if (tabMode === 'image') {
+        chipsToShow = document.querySelectorAll('.tab-image');
+    } else if (tabStyle === 'thinking') {
+        chipsToShow = document.querySelectorAll('.tab-thinking');
+    } else if (tabStyle === 'url-context') {
+        chipsToShow = document.querySelectorAll('.tab-url');
+    } else {
+        // Canvas/normal text mode
+        chipsToShow = document.querySelectorAll('.tab-canvas');
+    }
+
+    chipsToShow.forEach(chip => chip.style.display = 'inline-block');
+}
 // Placeholder for other functions (simplified for demo)
 function handleThinkingMode(prompt) {
-    // Implementation here
-    console.log('Thinking mode:', prompt);
+    fetch('/api/generate-with-thinking', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt: prompt })
+    })
+        .then((response) => {
+        if (!response.ok) {
+            throw new Error('Hmm… grace takes time. Try again.');
+        }
+        return response.json();
+    })
+        .then((data) => {
+        const responseContainer = document.getElementById('response');
+        responseContainer.innerHTML = marked.parse(data.response || '');
+        // Show the TTS button if we have a response
+        if (data.response && data.response.trim()) {
+            const ttsButton = document.getElementById('tts-button');
+            ttsButton.style.display = 'block';
+            ttsButton.setAttribute('data-text', data.response);
+        }
+        hideLoading();
+    })
+        .catch((error) => {
+        console.error('Error:', error);
+        showError(error.message);
+        hideLoading();
+    });
 }
 function handleUrlContext(prompt) {
-    // Implementation here
-    console.log('URL context:', prompt);
+    fetch('/api/generate-with-url-context', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt: prompt })
+    })
+        .then((response) => {
+        if (!response.ok) {
+            throw new Error('Hmm… grace takes time. Try again.');
+        }
+        return response.json();
+    })
+        .then((data) => {
+        const responseContainer = document.getElementById('response');
+        responseContainer.innerHTML = marked.parse(data.response || '');
+        // Show the TTS button if we have a response
+        if (data.response && data.response.trim()) {
+            const ttsButton = document.getElementById('tts-button');
+            ttsButton.style.display = 'block';
+            ttsButton.setAttribute('data-text', data.response);
+        }
+        hideLoading();
+    })
+        .catch((error) => {
+        console.error('Error:', error);
+        showError(error.message);
+        hideLoading();
+    });
 }
 function handleImageGeneration(prompt) {
-    // Implementation here
-    console.log('Image generation:', prompt);
+    fetch('/api/generate-image', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt: prompt })
+    })
+        .then((response) => {
+        if (!response.ok) {
+            throw new Error('Hmm… grace takes time. Try again.');
+        }
+        return response.json();
+    })
+        .then((data) => {
+        const imageContainer = document.getElementById('image-container');
+        const generatedImage = document.getElementById('generated-image');
+        const imageMessage = document.getElementById('image-message');
+        const downloadImage = document.getElementById('download-image');
+        const fullscreenImage = document.getElementById('fullscreen-image');
+
+        if (data.image_url) {
+            generatedImage.src = data.image_url;
+            generatedImage.style.display = 'block';
+            downloadImage.href = data.image_url;
+            downloadImage.style.display = 'inline-block';
+            fullscreenImage.style.display = 'inline-block';
+            imageMessage.style.display = 'none';
+        } else {
+            imageMessage.textContent = data.message || 'Image generation failed';
+            imageMessage.style.display = 'block';
+        }
+
+        imageContainer.style.display = 'block';
+        hideLoading();
+    })
+        .catch((error) => {
+        console.error('Error:', error);
+        const imageContainer = document.getElementById('image-container');
+        const imageMessage = document.getElementById('image-message');
+        imageMessage.textContent = error.message;
+        imageMessage.style.display = 'block';
+        imageContainer.style.display = 'block';
+        hideLoading();
+    });
 }

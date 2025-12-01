@@ -226,30 +226,40 @@ h1:not(:first-of-type) {
 .theme-toggle, .menu-toggle {
     background: transparent;
     border: none;
-    color: #eda9a9;
+    color: var(--text-secondary);
     cursor: pointer;
-    padding: 0.375rem;
-    border-radius: 4px;
-    transition: all 0.1s ease;
+    padding: 0.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .theme-toggle svg, .menu-toggle svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     stroke-width: 1.5;
-    opacity: 0.6;
-}
-
-.theme-toggle:hover, .menu-toggle:hover {
-    background: var(--background-secondary);
-    color: var(--text);
+    opacity: 0.5;
 }
 
 .theme-toggle:hover svg, .menu-toggle:hover svg {
-    opacity: 1;
+    opacity: 0.7;
+}
+
+/* Theme toggle icons */
+.sun-icon {
+    display: block;
+}
+
+.moon-icon {
+    display: none;
+}
+
+[data-theme="light"] .sun-icon {
+    display: none;
+}
+
+[data-theme="light"] .moon-icon {
+    display: block;
 }
 
 /* Main content area */
@@ -344,6 +354,35 @@ h1:not(:first-of-type) {
 .unified-input::placeholder {
     color: var(--text-tertiary);
     font-weight: 400;
+}
+
+.input-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--background-secondary);
+    border-top: 1px solid var(--border-light);
+}
+
+.suggestion-chip {
+    background: var(--background-elevated);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 0.375rem 0.75rem;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    display: none; /* Hidden by default, shown by JavaScript */
+}
+
+.suggestion-chip:hover {
+    background: var(--accent-blue);
+    color: white;
+    border-color: var(--accent-blue);
 }
 
 .search-actions {
@@ -590,34 +629,55 @@ h1:not(:first-of-type) {
     justify-content: center;
 }
 
+.close-menu:hover {
+    background: var(--background-secondary);
+    color: var(--text);
+}
+
+.sidebar-content {
+    padding: 1.5rem;
+}
+
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
 /* Theme Toggle */
 .theme-toggle {
     background: transparent;
     border: none;
     color: var(--text-secondary);
     cursor: pointer;
-    padding: 0.375rem;
-    border-radius: 4px;
-    transition: all 0.1s ease;
+    padding: 0.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .theme-toggle svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     stroke-width: 1.5;
-    opacity: 0.6;
-}
-
-.theme-toggle:hover {
-    background: var(--background-secondary);
-    color: var(--text);
+    opacity: 0.5;
 }
 
 .theme-toggle:hover svg {
-    opacity: 1;
+    opacity: 0.7;
 }
 
 /* Search Tabs */
@@ -730,6 +790,20 @@ h1:not(:first-of-type) {
   .search-tabs > * {
     display: inline-block;
     white-space: normal;
+  }
+
+  .input-suggestions {
+    padding: 0.5rem 1rem;
+  }
+
+  .suggestion-chip {
+    font-size: 13px;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .sidebar-menu {
+    width: 100vw;
+    right: -100vw;
   }
 }
 
