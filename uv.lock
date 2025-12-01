@@ -1660,8 +1660,8 @@ wheels = [
 
 [[package]]
 name = "vortai"
-version = "0.0.0"
-source = { virtual = "." }
+version = "0.0.1"
+source = { editable = "." }
 dependencies = [
     { name = "flask", extra = ["async"] },
     { name = "flask-cors" },

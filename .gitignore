@@ -37,3 +37,7 @@ ENV/
 # Vercel
 .vercel
 .qodo
+
+# Coverage
+.coverage
+coverage.xml

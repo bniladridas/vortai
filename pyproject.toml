@@ -37,3 +37,6 @@ target-version = ['py312']
 
 [tool.setuptools.packages.find]
 include = ["vortai*"]
+
+[tool.uv]
+package = true
