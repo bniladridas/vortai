@@ -25,6 +25,8 @@ jobs:
   # Test job: Validates code quality and functionality
   test:
     runs-on: ubuntu-latest
+    env:
+      GEMINI_API_KEY: dummy
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

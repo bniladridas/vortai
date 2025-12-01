@@ -23,7 +23,7 @@ runs:
       run: uv run black --check .
       shell: bash
     - name: Run unit tests with coverage
-      run: PYTHONPATH=. uv run pytest tests/ --cov=app --cov-report=xml -W ignore::DeprecationWarning
+      run: PYTHONPATH=. uv run pytest tests/ --cov=vortai --cov-report=xml -W ignore::DeprecationWarning
       shell: bash
     - name: Run integration test
       run: |
