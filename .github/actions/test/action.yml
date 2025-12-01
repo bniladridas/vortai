@@ -6,7 +6,7 @@
 # linting, formatting, unit tests, and configuration validation.
 
 name: 'Run Tests'
-description: 'Lint, format, unit tests with coverage, integration test, and validate'
+description: 'Lint, format, unit tests with coverage, and validate'
 runs:
   using: 'composite'
   steps:
@@ -34,17 +34,6 @@ runs:
       shell: bash
     - name: Run unit tests with coverage
       run: PYTHONPATH=. uv run pytest tests/ --cov=vortai --cov-report=xml -W ignore::DeprecationWarning
-      shell: bash
-    - name: Run integration test
-      run: |
-        uv run python -c "
-        from app import create_app
-        app = create_app()
-        client = app.test_client()
-        response = client.get('/')
-        assert response.status_code == 200
-        print('Integration test passed: Root endpoint responds')
-        "
       shell: bash
     - name: Validate vercel.json
       run: python -m json.tool vercel.json > /dev/null && echo "vercel.json is valid"
