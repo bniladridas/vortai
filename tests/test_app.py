@@ -4,7 +4,7 @@
 import os
 import tempfile
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from vortai import create_app
 
 # Set dummy API key for testing
