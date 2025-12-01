@@ -6,14 +6,12 @@ import ThinkingContainer from './components/ThinkingContainer';
 import ImageContainer from './components/ImageContainer';
 import TTSButton from './components/TTSButton';
 import AudioPlayer from './components/AudioPlayer';
-import CookieNotification from './components/CookieNotification';
 
 function App() {
   const [response, setResponse] = useState('');
   const [thinking, setThinking] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [audioUrl, setAudioUrl] = useState('');
-  const [showCookies, setShowCookies] = useState(true);
 
   return (
     <div className="app-container">
@@ -45,10 +43,6 @@ function App() {
 
         {imageUrl && <ImageContainer imageUrl={imageUrl} />}
       </main>
-
-      {showCookies && (
-        <CookieNotification onAccept={() => setShowCookies(false)} />
-      )}
     </div>
   );
 }
