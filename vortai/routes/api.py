@@ -34,7 +34,7 @@ os.makedirs(TEMP_IMAGE_DIR, exist_ok=True)
 
 @api_bp.route("/")
 def index():
-    return render_template("index.html")
+    return send_file("../frontend/build/index.html")
 
 
 @api_bp.route("/api/generate", methods=["POST"])
