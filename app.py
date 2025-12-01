@@ -4,12 +4,11 @@
 # This is the main entry point for the Gemini AI Search Flask application.
 # It creates and runs the app using the factory pattern.
 
-# Load environment variables from .env file
 from dotenv import load_dotenv
-
-load_dotenv()
-
 from vortai import create_app
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = create_app()
 
