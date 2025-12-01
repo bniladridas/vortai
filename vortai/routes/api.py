@@ -32,11 +32,6 @@ TEMP_IMAGE_DIR = os.path.join(tempfile.gettempdir(), "gemini_images")
 os.makedirs(TEMP_IMAGE_DIR, exist_ok=True)
 
 
-@api_bp.route("/")
-def index():
-    return send_file("../frontend/build/index.html")
-
-
 @api_bp.route("/api/generate", methods=["POST"])
 def generate_response():
     try:

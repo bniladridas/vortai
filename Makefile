@@ -17,3 +17,16 @@ test:
 
 run:
 	uv run python app.py
+
+run-static:
+	uv run python static_app.py
+
+run-all:
+	@echo "Starting both interfaces..."
+	uv run python static_app.py &
+	sleep 2
+	uv run python app.py &
+	@echo "React interface: http://localhost:8000"
+	@echo "Static interface: http://localhost:5000"
+	@echo "Press Ctrl+C to stop all services"
+	wait

@@ -15,17 +15,19 @@ show_help() {
     echo "Usage: ./run-dev.sh [SERVICE]"
     echo ""
     echo "Services:"
-    echo "  all       - Start all services (backend + frontend + go)"
-    echo "  backend   - Start Flask backend only (port 8000)"
-    echo "  frontend  - Start React frontend only (port 3000)"
-    echo "  go        - Start Go text processing service only (port 8080)"
-    echo "  help      - Show this help message"
+    echo "  all         - Start all services (backend + frontend + go)"
+    echo "  backend     - Start React backend only (port 8000)"
+    echo "  static      - Start static web interface only (port 5001)"
+    echo "  frontend    - Start React frontend only (port 3000)"
+    echo "  go          - Start Go text processing service only (port 8080)"
+    echo "  interfaces  - Start both web interfaces (React + Static)"
+    echo "  help        - Show this help message"
     echo ""
     echo "Examples:"
-    echo "  ./run-dev.sh all        # Start everything"
-    echo "  ./run-dev.sh backend    # Backend development"
-    echo "  ./run-dev.sh frontend   # Frontend development"
-    echo "  ./run-dev.sh go         # Go service development"
+    echo "  ./run-dev.sh all         # Start everything"
+    echo "  ./run-dev.sh interfaces  # Start both web UIs"
+    echo "  ./run-dev.sh backend     # React backend development"
+    echo "  ./run-dev.sh static      # Static web interface"
     echo ""
 }
 
@@ -56,12 +58,21 @@ start_go() {
 }
 
 start_backend() {
-    echo "🔧 Starting Flask backend..."
+    echo "🔧 Starting React backend..."
     uv run python app.py &
     BACKEND_PID=$!
     echo "⏳ Waiting for backend to start..."
     sleep 3
-    echo "✅ Backend: http://localhost:8000"
+    echo "✅ React Backend: http://localhost:8000"
+}
+
+start_static() {
+    echo "🌐 Starting static web interface..."
+    uv run python static_app.py &
+    STATIC_PID=$!
+    echo "⏳ Waiting for static interface to start..."
+    sleep 2
+    echo "✅ Static Interface: http://localhost:5001"
 }
 
 start_frontend() {
@@ -76,36 +87,63 @@ start_frontend() {
 cleanup() {
     echo ""
     echo "🛑 Shutting down services..."
-    kill $GO_PID $BACKEND_PID $FRONTEND_PID 2>/dev/null
+    kill $GO_PID $BACKEND_PID $FRONTEND_PID $STATIC_PID 2>/dev/null
     exit 0
 }
 
 # Main service handling logic
 case $SERVICE in
+    "interfaces")
+        echo "🌐 Starting Both Web Interfaces"
+        echo "==============================="
+        check_env
+        trap cleanup SIGINT SIGTERM
+        start_static && start_backend
+        echo ""
+        echo "✅ Both interfaces started!"
+        echo "🌐 Static Interface: http://localhost:5001"
+        echo "🔧 React Interface: http://localhost:8000"
+        echo ""
+        echo "Press Ctrl+C to stop interfaces"
+        wait
+        ;;
+
     "all")
         echo "🚀 Starting ALL Vortai Services"
         echo "==============================="
         check_env
         trap cleanup SIGINT SIGTERM
-        start_go && start_backend && start_frontend
+        start_go && start_static && start_backend && start_frontend
         echo ""
         echo "✅ All services started!"
         echo "🐹 Go Service: http://localhost:8080"
-        echo "🔧 Backend: http://localhost:8000"
-        echo "📱 Frontend: http://localhost:3000"
+        echo "🌐 Static Interface: http://localhost:5001"
+        echo "🔧 React Backend: http://localhost:8000"
+        echo "📱 React Frontend: http://localhost:3000"
         echo ""
         echo "Press Ctrl+C to stop all services"
         wait
         ;;
 
     "backend")
-        echo "🔧 Starting Flask Backend Only"
+        echo "🔧 Starting React Backend Only"
         echo "=============================="
         check_env
         trap cleanup SIGINT SIGTERM
         start_backend
         echo ""
         echo "Press Ctrl+C to stop backend"
+        wait
+        ;;
+
+    "static")
+        echo "🌐 Starting Static Web Interface Only"
+        echo "====================================="
+        check_env
+        trap cleanup SIGINT SIGTERM
+        start_static
+        echo ""
+        echo "Press Ctrl+C to stop static interface"
         wait
         ;;
 

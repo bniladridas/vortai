@@ -38,9 +38,13 @@ Use the development manager to start services:
 ./run-dev.sh all
 
 # Start individual services
-./run-dev.sh backend    # Flask API server (port 8000)
-./run-dev.sh frontend   # React UI (port 3000)
+./run-dev.sh backend    # React Flask server (port 8000)
+./run-dev.sh static     # Static web interface (port 5001)
+./run-dev.sh frontend   # React development server (port 3000)
 ./run-dev.sh go         # Go text processor (port 8080)
+
+# Start both web interfaces
+./run-dev.sh interfaces # React (8000) + Static (5001)
 
 # Show help
 ./run-dev.sh help
@@ -65,17 +69,52 @@ cd frontend && npm install
 ## Quick Start
 
 1. **Set your Gemini API key:**
+    ```bash
+    export GEMINI_API_KEY="your-api-key-here"
+    ```
+
+2. **Choose your interface:**
+
+   **Option A: React Interface (Recommended)**
    ```bash
-   export GEMINI_API_KEY="your-api-key-here"
+   make run              # React interface on port 8000
+   # Visit: http://localhost:8000
    ```
 
-2. **Start the development server:**
+   **Option B: Static Web Interface**
    ```bash
-   make run
+   make run-static       # Static interface on port 5001
+   # Visit: http://localhost:5001
    ```
 
-3. **Open your browser:**
-   Visit http://localhost:5000 to access the web interface.
+   **Option C: Both Interfaces**
+   ```bash
+   ./run-dev.sh interfaces
+   # React: http://localhost:8000
+   # Static: http://localhost:5001
+   ```
+
+### Interface Options
+
+**React Interface (Port 8000):**
+- Modern single-page application
+- Built with React + TypeScript
+- Advanced UI components and animations
+- Recommended for development and full features
+
+**Static Interface (Port 5001):**
+- Traditional HTML/CSS/JavaScript
+- Lightweight and fast loading
+- No build process required
+- Perfect for simple deployments
+
+Both interfaces provide identical functionality:
+- ✅ Text generation (Canvas mode)
+- ✅ AI thinking with reasoning steps
+- ✅ Web search integration
+- ✅ Text-to-speech (TTS)
+- ✅ Image generation
+- ✅ Dark/light theme support
 
 ### CLI Usage
 
@@ -251,7 +290,10 @@ vortai/
 │   ├── models.py       # Model configurations
 │   ├── routes/         # Flask API endpoints
 │   └── extensions/     # Additional utilities
-├── frontend/           # React TypeScript frontend
+├── frontend/           # React TypeScript frontend (port 8000)
+├── web/                # Static HTML/CSS/JS interface (port 5001)
+│   ├── static/         # CSS, JS, images
+│   └── templates/      # HTML templates
 ├── cython_ext/         # Cython performance extensions
 ├── vortai/rust_ext/    # Rust performance extensions
 ├── go/                 # Go services
@@ -273,8 +315,10 @@ uv run pytest tests/ --cov=vortai  # With coverage
 
 # Development services
 ./run-dev.sh all           # Start all services
-./run-dev.sh backend       # Flask API only (port 8000)
-./run-dev.sh frontend      # React UI only (port 3000)
+./run-dev.sh interfaces    # Both web interfaces (React + Static)
+./run-dev.sh backend       # React Flask server (port 8000)
+./run-dev.sh static        # Static web interface (port 5001)
+./run-dev.sh frontend      # React development server (port 3000)
 ./run-dev.sh go           # Go processor only (port 8080)
 
 # Building extensions

@@ -6,6 +6,52 @@ marked.setOptions({
     breaks: true,
     gfm: true
 });
+
+// TTS button handler
+function handleTTS() {
+    const ttsButton = document.getElementById('tts-button');
+    const text = ttsButton.getAttribute('data-text');
+    const audioPlayer = document.getElementById('audio-player');
+
+    if (!text || !text.trim()) {
+        showError('No text available for TTS');
+        return;
+    }
+
+    // Show loading state
+    ttsButton.disabled = true;
+    ttsButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+    fetch('/api/text-to-speech', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: text })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('TTS request failed');
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        const url = URL.createObjectURL(blob);
+        audioPlayer.src = url;
+        audioPlayer.style.display = 'block';
+        audioPlayer.play();
+    })
+    .catch(error => {
+        console.error('TTS Error:', error);
+        showError('Failed to generate audio. Please try again.');
+    })
+    .finally(() => {
+        // Reset button state
+        ttsButton.disabled = false;
+        ttsButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+    });
+}
+
 // Unified search handler
 function handleUnifiedSearch() {
     const input = document.querySelector('.unified-input');
@@ -242,6 +288,12 @@ function setupMenuToggle() {
             closeMenuFunc();
         }
     });
+
+    // TTS button click
+    const ttsButton = document.getElementById('tts-button');
+    if (ttsButton) {
+        ttsButton.addEventListener('click', handleTTS);
+    }
 }
 
 // Setup theme toggle functionality
