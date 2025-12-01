@@ -42,17 +42,28 @@ runs:
     - name: Create tag
       run: git tag v${{ env.NEW_VERSION }} && git push origin v${{ env.NEW_VERSION }}
       shell: bash
+    - name: Generate release notes
+      run: |
+        notes=$(git log --oneline --pretty=format:"- %s" HEAD~1..HEAD | grep -v "fix: pre-commit" | grep -v "feat: add pre-commit")
+        echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+        echo "## Automated release v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
+        echo "" >> $GITHUB_ENV
+        echo "### Changes" >> $GITHUB_ENV
+        echo "$notes" >> $GITHUB_ENV
+        echo "" >> $GITHUB_ENV
+        echo "### Features" >> $GITHUB_ENV
+        echo "- Multi-language AI platform (Python, Rust, Go, TypeScript, Cython)" >> $GITHUB_ENV
+        echo "- Async operations and caching" >> $GITHUB_ENV
+        echo "- Security hardening" >> $GITHUB_ENV
+        echo "- CI/CD automation" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+      shell: bash
+
     - name: Create release
       uses: softprops/action-gh-release@v2
       with:
         tag_name: v${{ env.NEW_VERSION }}
         name: Release v${{ env.NEW_VERSION }}
-        body: |
-          Automated release v${{ env.NEW_VERSION }}
-
-          - Reorganized codebase
-          - Added linting and formatting
-          - SPDX compliance
-          - CI/CD setup
+        body: ${{ env.RELEASE_NOTES }}
         draft: false
         prerelease: false
