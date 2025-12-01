@@ -36,7 +36,7 @@ def test_index_route(client):
     """Test the index route returns 200."""
     response = client.get("/")
     assert response.status_code == 200
-    assert b"Vortai" in response.data  # Check for title in index.html
+    assert b"React App" in response.data  # Check for title in React index.html
 
 
 @patch("vortai.routes.api.ai.generate_text")
