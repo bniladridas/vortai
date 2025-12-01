@@ -24,7 +24,9 @@ genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 def create_app():
     app = Flask(
-        __name__, static_folder="../web/static", template_folder="../web/templates"
+        __name__,
+        static_folder="../frontend/build/static",
+        template_folder="../frontend/build",
     )
     CORS(app)  # Enable CORS for all routes
 

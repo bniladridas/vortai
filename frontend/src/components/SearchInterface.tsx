@@ -1,0 +1,289 @@
+import React, { useState, useRef, useEffect } from 'react';
+
+interface SearchInterfaceProps {
+  onResponse: (content: string) => void;
+  onThinking: (content: string) => void;
+  onImage: (url: string) => void;
+  onAudio: (url: string) => void;
+}
+
+type Mode = 'text' | 'image';
+type Style = 'normal' | 'thinking' | 'url-context';
+
+interface TabConfig {
+  mode: Mode;
+  style: Style;
+  label: string;
+  icon: React.ReactNode;
+}
+
+const SearchInterface: React.FC<SearchInterfaceProps> = ({
+  onResponse,
+  onThinking,
+  onImage,
+  onAudio
+}) => {
+  const [input, setInput] = useState('');
+  const [activeTab, setActiveTab] = useState<{ mode: Mode; style: Style }>({
+    mode: 'text',
+    style: 'normal'
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const tabs: TabConfig[] = [
+    {
+      mode: 'text',
+      style: 'normal',
+      label: 'Canvas',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor"/>
+          <line x1="9" y1="9" x2="15" y2="9" stroke="currentColor"/>
+          <line x1="9" y1="15" x2="15" y2="15" stroke="currentColor"/>
+        </svg>
+      )
+    },
+    {
+      mode: 'text',
+      style: 'thinking',
+      label: 'AI Thinking',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="3" stroke="currentColor"/>
+          <circle cx="12" cy="5" r="1" fill="currentColor"/>
+          <circle cx="19" cy="12" r="1" fill="currentColor"/>
+          <circle cx="5" cy="12" r="1" fill="currentColor"/>
+        </svg>
+      )
+    },
+    {
+      mode: 'text',
+      style: 'url-context',
+      label: 'Web search',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor"/>
+          <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor"/>
+        </svg>
+      )
+    },
+    {
+      mode: 'image',
+      style: 'normal',
+      label: 'Image generation',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor"/>
+          <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+          <polyline points="21,15 16,10 5,21" stroke="currentColor"/>
+        </svg>
+      )
+    }
+  ];
+
+  const suggestions = {
+    canvas: [
+      'Explain quantum computing in simple terms',
+      'Write a Python function to reverse a string',
+      'Create a recipe for chocolate chip cookies'
+    ],
+    thinking: [
+      'Solve this step by step: If a train travels at 60 mph for 2 hours, how far does it go?',
+      'Explain the water cycle with detailed reasoning',
+      'Calculate compound interest: $1000 at 5% for 3 years'
+    ],
+    url: [
+      'Search https://en.wikipedia.org for information about quantum physics',
+      'Find latest AI news from https://techcrunch.com and https://www.theverge.com',
+      'Check https://github.com for popular Python repositories this month'
+    ],
+    image: [
+      'A beautiful sunset over mountains with vibrant colors',
+      'A futuristic city with flying cars and neon lights',
+      'A cute cartoon robot with big eyes and a friendly smile'
+    ]
+  };
+
+  const handleSubmit = async () => {
+    if (!input.trim()) return;
+
+    setIsLoading(true);
+
+    try {
+      if (activeTab.mode === 'text') {
+        let endpoint = '/api/generate';
+        if (activeTab.style === 'thinking') {
+          endpoint = '/api/generate-with-thinking';
+        } else if (activeTab.style === 'url-context') {
+          endpoint = '/api/generate-with-url-context';
+        }
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: input })
+        });
+
+        const data = await response.json();
+
+        if (activeTab.style === 'thinking') {
+          onThinking(data.thinking_summary?.join('\n') || '');
+          onResponse(data.response || '');
+        } else {
+          onResponse(data.response || '');
+        }
+      } else if (activeTab.mode === 'image') {
+        const response = await fetch('/api/generate-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: input })
+        });
+
+        // For images, we'll handle the blob response
+        if (response.ok) {
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          onImage(url);
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setInput(suggestion);
+  };
+
+  const getCurrentSuggestions = () => {
+    if (activeTab.mode === 'image') return suggestions.image;
+    if (activeTab.style === 'thinking') return suggestions.thinking;
+    if (activeTab.style === 'url-context') return suggestions.url;
+    return suggestions.canvas;
+  };
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 120) + 'px';
+    }
+  }, [input]);
+
+  return (
+    <div className="search-container">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+        <div style={{ color: '#9ca3af' }}>
+          🔍
+        </div>
+
+        <textarea
+          ref={textareaRef}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit();
+            }
+          }}
+          placeholder="Ask anything..."
+          style={{
+            flex: 1,
+            background: 'transparent',
+            border: 'none',
+            outline: 'none',
+            color: 'white',
+            resize: 'none',
+            minHeight: '24px',
+            maxHeight: '120px',
+            overflowY: 'auto'
+          }}
+          rows={1}
+        />
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <button
+            onClick={() => setInput('')}
+            style={{
+              padding: '0.5rem',
+              background: 'none',
+              border: 'none',
+              color: '#9ca3af',
+              cursor: 'pointer',
+              opacity: input ? 1 : 0,
+              pointerEvents: input ? 'auto' : 'none'
+            }}
+          >
+            ✕
+          </button>
+
+          <button
+            onClick={handleSubmit}
+            disabled={isLoading || !input.trim()}
+            className="button button-primary"
+            style={{
+              padding: '0.75rem',
+              opacity: isLoading || !input.trim() ? 0.5 : 1,
+              cursor: isLoading || !input.trim() ? 'not-allowed' : 'pointer'
+            }}
+          >
+            {isLoading ? '⏳' : '➤'}
+          </button>
+        </div>
+      </div>
+
+      {!input && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
+          {getCurrentSuggestions().map((suggestion, index) => (
+            <button
+              key={index}
+              onClick={() => handleSuggestionClick(suggestion)}
+              style={{
+                padding: '0.375rem 0.75rem',
+                backgroundColor: '#374151',
+                color: '#d1d5db',
+                border: 'none',
+                borderRadius: '9999px',
+                fontSize: '14px',
+                cursor: 'pointer'
+              }}
+            >
+              {suggestion}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div style={{ display: 'flex', gap: '0.25rem' }}>
+        {tabs.map((tab) => (
+          <button
+            key={`${tab.mode}-${tab.style}`}
+            onClick={() => setActiveTab({ mode: tab.mode, style: tab.style })}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              padding: '0.5rem 1rem',
+              backgroundColor: activeTab.mode === tab.mode && activeTab.style === tab.style ? '#dc2626' : 'transparent',
+              color: activeTab.mode === tab.mode && activeTab.style === tab.style ? 'white' : '#9ca3af',
+              border: 'none',
+              borderRadius: '0.5rem',
+              fontSize: '14px',
+              fontWeight: '500',
+              cursor: 'pointer'
+            }}
+          >
+            <div style={{ width: '16px', height: '16px' }}>{tab.icon}</div>
+            {tab.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default SearchInterface;

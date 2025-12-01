@@ -1,0 +1,46 @@
+import React, { useState } from 'react';
+
+interface HeaderProps {
+  onMenuToggle: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
+  const [isDark, setIsDark] = useState(true);
+
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+    // In a real app, you'd update the document class or use a theme context
+  };
+
+  return (
+    <header className="header">
+      <div>
+        <img
+          src="/logo.png"
+          alt="Vortai Logo"
+          style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+        />
+      </div>
+
+      <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <button
+          onClick={toggleTheme}
+          style={{ padding: '0.5rem', background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer' }}
+          aria-label="Toggle theme"
+        >
+          {isDark ? '☀️' : '🌙'}
+        </button>
+
+        <button
+          onClick={onMenuToggle}
+          style={{ padding: '0.5rem', background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer' }}
+          aria-label="Open menu"
+        >
+          ⋯
+        </button>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
