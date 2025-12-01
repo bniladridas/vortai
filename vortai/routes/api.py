@@ -4,7 +4,7 @@
 # This module defines the API routes for the Gemini AI Search application,
 # including text generation, thinking mode, URL context, TTS, and image generation.
 
-from flask import Blueprint, request, jsonify, render_template, send_file
+from flask import Blueprint, request, jsonify, send_file
 import os
 import tempfile
 import mimetypes
