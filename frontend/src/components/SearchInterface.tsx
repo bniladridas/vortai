@@ -141,8 +141,9 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
           body: JSON.stringify({ prompt: input })
         });
 
-        // For images, we'll handle the blob response
+        // For images, the backend returns a file download
         if (response.ok) {
+          // Create a blob URL from the response
           const blob = await response.blob();
           const url = URL.createObjectURL(blob);
           onImage(url);
