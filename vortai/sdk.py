@@ -9,6 +9,7 @@ import os
 import uuid
 import tempfile
 import mimetypes
+import requests
 from typing import Optional, Dict, Any
 import google.generativeai as genai
 from gtts import gTTS
@@ -86,6 +87,30 @@ class GeminiAI:
         tts = gTTS(text=text, lang="en", slow=False)
         tts.save(filepath)
         return filepath
+
+    def process_text_go(self, text: str) -> str:
+        """Process text using Go service for normalization."""
+        if not text:
+            raise ValueError("No text provided")
+
+        try:
+            # Call Go service running on localhost:8080
+            response = requests.post(
+                "http://localhost:8080/process", data={"text": text}, timeout=5
+            )
+            response.raise_for_status()
+            return response.text.strip()
+        except requests.exceptions.RequestException as e:
+            # Fallback to Python implementation if Go service is not available
+            print(f"Go service unavailable ({e}), using Python fallback")
+            return self._process_text_python(text)
+
+    def _process_text_python(self, text: str) -> str:
+        """Python fallback for text processing."""
+        import re
+
+        # Simple text normalization: trim and normalize spaces
+        return re.sub(r"\s+", " ", text.strip())
 
     def generate_image(self, prompt: str) -> str:
         """Generate image and return file path."""

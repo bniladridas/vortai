@@ -148,3 +148,22 @@ def generate_image():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@api_bp.route("/api/process-text-go", methods=["POST"])
+def process_text_go():
+    try:
+        data = request.json
+        text = data.get("text", "").strip()
+
+        if not text:
+            return jsonify({"error": "No text provided"}), 400
+
+        if len(text) > 10000:  # Reasonable limit for text processing
+            return jsonify({"error": "Text too long (max 10000 chars)"}), 400
+
+        processed_text = ai.process_text_go(text)
+        return jsonify({"processed_text": processed_text})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

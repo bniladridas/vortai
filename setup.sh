@@ -51,9 +51,27 @@ npx tsc --project web/static/ts
 echo "Building Cython extension..."
 uv run cythonize -i cython_ext/text_utils.pyx
 
-# Set up Go (if needed)
-echo "Go is installed. Run Go services with: go run go/src/main.go"
+# Set up Go service
+echo "Starting Go text processing service..."
+cd go/src
+go run main.go &
+GO_PID=$!
+cd ../..
+
+# Wait a moment for Go service to start
+sleep 2
+
+# Test Go service
+if curl -s http://localhost:8080/process -d "text=test" > /dev/null; then
+    echo "Go service started successfully on port 8080"
+else
+    echo "Warning: Go service may not have started properly"
+fi
 
 echo "Setup complete."
+echo "Services running:"
+echo "  - Go text processing service: http://localhost:8080"
+echo "  - Flask API: will start on http://localhost:5000"
+echo ""
 echo "Run: source .venv/bin/activate && make run"
 echo "For development: make lint, make format, make test"
