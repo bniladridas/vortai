@@ -38,5 +38,10 @@ target-version = ['py312']
 [tool.setuptools.packages.find]
 include = ["vortai*"]
 
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning:google.*",
+]
+
 [tool.uv]
 package = true
