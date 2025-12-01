@@ -29,7 +29,7 @@ class GeminiAI:
         genai.configure(api_key=api_key)
         self.cache = {}  # Simple in-memory cache
 
-    async def generate_text(self, prompt: str) -> str:
+    def generate_text(self, prompt: str) -> str:
         """Generate text response from prompt."""
         if not prompt or len(prompt) > 5000:
             raise ValueError("Invalid prompt")
@@ -37,7 +37,7 @@ class GeminiAI:
         if key in self.cache:
             return self.cache[key]
         model = genai.GenerativeModel(models.TEXT_MODEL)
-        response = await asyncio.to_thread(model.generate_content, prompt)
+        response = model.generate_content(prompt)
         result = response.text
         self.cache[key] = result
         return result

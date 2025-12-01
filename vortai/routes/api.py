@@ -38,7 +38,7 @@ def index():
 
 
 @api_bp.route("/api/generate", methods=["POST"])
-async def generate_response():
+def generate_response():
     try:
         data = request.json
         prompt = data.get("prompt", "").strip()
@@ -49,7 +49,7 @@ async def generate_response():
         if len(prompt) > 5000:
             return jsonify({"error": "Prompt too long (max 5000 chars)"}), 400
 
-        response = await ai.generate_text(prompt)
+        response = ai.generate_text(prompt)
         return jsonify({"response": response})
 
     except Exception as e:
