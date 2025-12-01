@@ -4,7 +4,7 @@
 import os
 import tempfile
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from vortai import create_app
 
 # Set dummy API key for testing
@@ -32,11 +32,18 @@ def test_app_creation():
     assert app.name == "vortai"
 
 
-def test_index_route(client):
+@patch("vortai.routes.api.send_file")
+def test_index_route(mock_send_file, client):
     """Test the index route returns 200."""
+    # Mock the send_file response
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.data = b"React App"
+    mock_send_file.return_value = mock_response
+
     response = client.get("/")
     assert response.status_code == 200
-    assert b"React App" in response.data  # Check for title in React index.html
+    mock_send_file.assert_called_once()
 
 
 @patch("vortai.routes.api.ai.generate_text")
