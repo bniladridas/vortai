@@ -40,7 +40,10 @@ runs:
           automated
           version-bump
     - name: Create tag
-      run: git tag v${{ env.NEW_VERSION }} && git push origin v${{ env.NEW_VERSION }}
+      run: |
+        if ! git rev-parse v${{ env.NEW_VERSION }} >/dev/null 2>&1; then
+          git tag v${{ env.NEW_VERSION }} && git push origin v${{ env.NEW_VERSION }}
+        fi
       shell: bash
     - name: Generate release notes
       run: |
