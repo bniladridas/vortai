@@ -24,7 +24,7 @@ Clone the repository and run the setup script:
 ```bash
 git clone https://github.com/bniladridas/vortai.git
 cd vortai
-./setup.sh
+./shell/setup.sh
 ```
 
 This installs all dependencies, builds extensions, and sets up the development environment.
@@ -35,19 +35,19 @@ Use the development manager to start services:
 
 ```bash
 # Start all services
-./run-dev.sh all
+./shell/run-dev.sh all
 
 # Start individual services
-./run-dev.sh backend    # React Flask server (port 8000)
-./run-dev.sh static     # Static web interface (port 5001)
-./run-dev.sh frontend   # React development server (port 3000)
-./run-dev.sh go         # Go text processor (port 8080)
+./shell/run-dev.sh backend    # React Flask server (port 8000)
+./shell/run-dev.sh static     # Static web interface (port 5001)
+./shell/run-dev.sh frontend   # React development server (port 3000)
+./shell/run-dev.sh go         # Go text processor (port 8080)
 
 # Start both web interfaces
-./run-dev.sh interfaces # React (8000) + Static (5001)
+./shell/run-dev.sh interfaces # React (8000) + Static (5001)
 
 # Show help
-./run-dev.sh help
+./shell/run-dev.sh help
 ```
 
 ### Manual Installation
@@ -95,7 +95,7 @@ cd frontend && npm install
 
    **Option D: Both Interfaces (Development)**
    ```bash
-   ./run-dev.sh interfaces
+   ./shell/run-dev.sh interfaces
    # React: http://localhost:8000
    # Static: http://localhost:5001
    ```
@@ -300,6 +300,9 @@ vortai/
 ├── web/                # Static HTML/CSS/JS interface (port 5001)
 │   ├── static/         # CSS, JS, images
 │   └── templates/      # HTML templates
+├── shell/              # Development scripts
+│   ├── run-dev.sh     # Service management script
+│   └── setup.sh       # Environment setup script
 ├── cython_ext/         # Cython performance extensions
 ├── vortai/rust_ext/    # Rust performance extensions
 ├── go/                 # Go services
@@ -320,12 +323,12 @@ make test          # Run all tests
 uv run pytest tests/ --cov=vortai  # With coverage
 
 # Development services
-./run-dev.sh all           # Start all services
-./run-dev.sh interfaces    # Both web interfaces (React + Static)
-./run-dev.sh backend       # React Flask server (port 8000)
-./run-dev.sh static        # Static web interface (port 5001)
-./run-dev.sh frontend      # React development server (port 3000)
-./run-dev.sh go           # Go processor only (port 8080)
+./shell/run-dev.sh all           # Start all services
+./shell/run-dev.sh interfaces    # Both web interfaces (React + Static)
+./shell/run-dev.sh backend       # React Flask server (port 8000)
+./shell/run-dev.sh static        # Static web interface (port 5001)
+./shell/run-dev.sh frontend      # React development server (port 3000)
+./shell/run-dev.sh go           # Go processor only (port 8080)
 
 # Building extensions
 uv run cythonize -i cython_ext/text_utils.pyx  # Build Cython
@@ -372,7 +375,7 @@ We welcome contributions! Please see our [contributing guidelines](CONTRIBUTING.
 1. Fork the repository
 2. Clone your fork: `git clone https://github.com/yourusername/vortai.git`
 3. Create a feature branch: `git checkout -b feature/your-feature`
-4. Install dependencies: `./setup.sh`
+4. Install dependencies: `./shell/setup.sh`
 5. Make your changes
 6. Add tests for new functionality
 7. Run tests: `make test`
