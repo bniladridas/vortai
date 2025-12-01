@@ -1,0 +1,36 @@
+[project]
+name = "vortai"
+version = "0.0.0"
+license = "MIT"
+requires-python = ">=3.9"
+dependencies = [
+    "flask[async]==2.3.3",
+    "flask-cors==4.0.2",
+    "python-dotenv==1.0.0",
+    "google-generativeai>=0.3.1",
+    "gtts==2.5.4",
+    "google-genai>=0.1.0"
+]
+
+[project.scripts]
+vortai = "vortai:main"
+
+[dependency-groups]
+dev = [
+    "ruff",
+    "black",
+    "yamllint",
+    "pytest",
+    "pytest-cov",
+    "redis",
+    "typescript>=0.0.12",
+    "cython>=3.2.2",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.black]
+line-length = 88
+target-version = ['py312']

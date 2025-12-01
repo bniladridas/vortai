@@ -1,0 +1,54 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Niladri Das <bniladridas>
+# SPDX-License-Identifier: MIT
+---
+# Composite Action: Handle Release
+# This action automates the release process: version bumping, PR creation,
+# tagging, and GitHub release publishing.
+
+name: 'Handle Release'
+description: 'Bump version, create PR, tag, and release'
+runs:
+  using: 'composite'
+  steps:
+    - name: Bump version
+      run: |
+        current=$(cat VERSION)
+        new=$(echo $current | awk -F. '{print $1"."$2"."($3+1)}')
+        echo $new > VERSION
+        sed -i "s/__version__ = \"$current\"/__version__ = \"$new\"/" app/__init__.py
+        sed -i "s/version = \"$current\"/version = \"$new\"/" pyproject.toml
+        echo "CURRENT_VERSION=$current" >> $GITHUB_ENV
+        echo "NEW_VERSION=$new" >> $GITHUB_ENV
+      shell: bash
+    - name: Create PR
+      uses: peter-evans/create-pull-request@v6
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: automated/version-bump
+        title: "Automated version bump"
+        body: |
+          This PR bumps the version for a new release.
+
+          - Increments patch version
+          - Updates VERSION, __init__.py, pyproject.toml
+        commit-message: "chore: bump version"
+        labels: |
+          automated
+          version-bump
+    - name: Create tag
+      run: git tag v${{ env.NEW_VERSION }} && git push origin v${{ env.NEW_VERSION }}
+      shell: bash
+    - name: Create release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ env.NEW_VERSION }}
+        name: Release v${{ env.NEW_VERSION }}
+        body: |
+          Automated release v${{ env.NEW_VERSION }}
+
+          - Reorganized codebase
+          - Added linting and formatting
+          - SPDX compliance
+          - CI/CD setup
+        draft: false
+        prerelease: false

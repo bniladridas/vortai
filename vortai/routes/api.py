@@ -1,0 +1,150 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Niladri Das <bniladridas>
+# SPDX-License-Identifier: MIT
+#
+# This module defines the API routes for the Gemini AI Search application,
+# including text generation, thinking mode, URL context, TTS, and image generation.
+
+from flask import Blueprint, request, jsonify, render_template, send_file
+import os
+import tempfile
+import mimetypes
+from ..sdk import GeminiAI
+
+
+def is_safe_path(base_path, target_path):
+    """Check if target_path is within base_path to prevent path traversal."""
+    try:
+        return os.path.commonpath(
+            [os.path.abspath(base_path), os.path.abspath(target_path)]
+        ) == os.path.abspath(base_path)
+    except ValueError:
+        return False
+
+
+ai = GeminiAI()
+api_bp = Blueprint("api", __name__)
+
+# Create directories for temporary files
+TEMP_AUDIO_DIR = os.path.join(tempfile.gettempdir(), "gemini_tts")
+os.makedirs(TEMP_AUDIO_DIR, exist_ok=True)
+
+TEMP_IMAGE_DIR = os.path.join(tempfile.gettempdir(), "gemini_images")
+os.makedirs(TEMP_IMAGE_DIR, exist_ok=True)
+
+
+@api_bp.route("/")
+def index():
+    return render_template("index.html")
+
+
+@api_bp.route("/api/generate", methods=["POST"])
+async def generate_response():
+    try:
+        data = request.json
+        prompt = data.get("prompt", "").strip()
+
+        if not prompt:
+            return jsonify({"error": "No prompt provided"}), 400
+
+        if len(prompt) > 5000:
+            return jsonify({"error": "Prompt too long (max 5000 chars)"}), 400
+
+        response = await ai.generate_text(prompt)
+        return jsonify({"response": response})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@api_bp.route("/api/generate-with-thinking", methods=["POST"])
+def generate_response_with_thinking():
+    try:
+        data = request.json
+        prompt = data.get("prompt", "").strip()
+
+        if not prompt:
+            return jsonify({"error": "No prompt provided"}), 400
+
+        if len(prompt) > 5000:
+            return jsonify({"error": "Prompt too long (max 5000 chars)"}), 400
+
+        result = ai.generate_text_with_thinking(prompt)
+        return jsonify(result)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@api_bp.route("/api/generate-with-url-context", methods=["POST"])
+def generate_response_with_url_context():
+    try:
+        data = request.json
+        prompt = data.get("prompt", "").strip()
+
+        if not prompt:
+            return jsonify({"error": "No prompt provided"}), 400
+
+        if len(prompt) > 5000:
+            return jsonify({"error": "Prompt too long (max 5000 chars)"}), 400
+
+        response = ai.generate_text_with_url_context(prompt)
+        return jsonify({"response": response})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@api_bp.route("/api/text-to-speech", methods=["POST"])
+def text_to_speech():
+    try:
+        data = request.json
+        text = data.get("text", "").strip()
+
+        if not text:
+            return jsonify({"error": "No text provided"}), 400
+
+        if len(text) > 1000:
+            return jsonify({"error": "Text too long (max 1000 chars)"}), 400
+
+        filepath = ai.text_to_speech(text)
+
+        # Prevent path traversal
+        if not is_safe_path(TEMP_AUDIO_DIR, filepath):
+            return jsonify({"error": "Invalid file path"}), 400
+
+        filename = os.path.basename(filepath)
+        return send_file(
+            filepath, mimetype="audio/mp3", as_attachment=True, download_name=filename
+        )
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@api_bp.route("/api/generate-image", methods=["POST"])
+def generate_image():
+    try:
+        data = request.json
+        prompt = data.get("prompt", "").strip()
+
+        if not prompt:
+            return jsonify({"error": "No prompt provided"}), 400
+
+        if len(prompt) > 5000:
+            return jsonify({"error": "Prompt too long (max 5000 chars)"}), 400
+
+        filepath = ai.generate_image(prompt)
+
+        # Prevent path traversal
+        if not is_safe_path(TEMP_IMAGE_DIR, filepath):
+            return jsonify({"error": "Invalid file path"}), 400
+
+        # Detect mime type
+        mime_type, _ = mimetypes.guess_type(filepath)
+        if not mime_type:
+            mime_type = "image/png"
+
+        return send_file(filepath, mimetype=mime_type)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
