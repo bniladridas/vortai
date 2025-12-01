@@ -41,7 +41,7 @@ runs:
           version-bump
     - name: Create tag
       run: |
-        if ! git rev-parse v${{ env.NEW_VERSION }} >/dev/null 2>&1; then
+        if ! git ls-remote --tags origin | grep -q "refs/tags/v${{ env.NEW_VERSION }}"; then
           git tag v${{ env.NEW_VERSION }} && git push origin v${{ env.NEW_VERSION }}
         fi
       shell: bash
