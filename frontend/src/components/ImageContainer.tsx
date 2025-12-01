@@ -11,7 +11,7 @@ const ImageContainer: React.FC<ImageContainerProps> = ({ imageUrl }) => {
     <div className="mb-6 p-4 bg-gray-800 rounded-lg border border-gray-700">
       <img
         src={imageUrl}
-        alt="Generated image"
+        alt="AI generated content"
         className="max-w-full h-auto rounded-lg"
       />
       <div className="mt-4 flex gap-2">
