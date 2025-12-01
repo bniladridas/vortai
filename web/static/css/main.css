@@ -270,7 +270,7 @@ h1:not(:first-of-type) {
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    
+
     box-shadow: 0 4px 12px var(--shadow-light);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }

@@ -2348,14 +2348,14 @@ return 0;
 
 /* "text_utils.pyx":6
  * # Cython extension for fast text processing
- * 
+ *
  * def cython_clean_text(str text):             # <<<<<<<<<<<<<<
  *     """Fast text cleaning using Cython."""
  *     cdef list words = text.split()
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10text_utils_1cython_clean_text(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_10text_utils_1cython_clean_text(PyObject *__pyx_self,
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -2364,7 +2364,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
 ); /*proto*/
 PyDoc_STRVAR(__pyx_doc_10text_utils_cython_clean_text, "Fast text cleaning using Cython.");
 static PyMethodDef __pyx_mdef_10text_utils_1cython_clean_text = {"cython_clean_text", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_10text_utils_1cython_clean_text, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_10text_utils_cython_clean_text};
-static PyObject *__pyx_pw_10text_utils_1cython_clean_text(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_10text_utils_1cython_clean_text(PyObject *__pyx_self,
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -2489,7 +2489,7 @@ static PyObject *__pyx_pf_10text_utils_cython_clean_text(CYTHON_UNUSED PyObject 
 
   /* "text_utils.pyx":6
  * # Cython extension for fast text processing
- * 
+ *
  * def cython_clean_text(str text):             # <<<<<<<<<<<<<<
  *     """Fast text cleaning using Cython."""
  *     cdef list words = text.split()
@@ -2819,7 +2819,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_text_utils(PyObject *__pyx_pyinit_
         Py_FatalError("failed to import 'refnanny' module");
   }
   #endif
-  
+
 __Pyx_RefNannySetupContext("PyInit_text_utils", 0);
   __Pyx_init_runtime_version();
   if (__Pyx_check_binary_version(__PYX_LIMITED_VERSION_HEX, __Pyx_get_runtime_version(), CYTHON_COMPILING_IN_LIMITED_API) < (0)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -2857,7 +2857,7 @@ __Pyx_RefNannySetupContext("PyInit_text_utils", 0);
 
   /* "text_utils.pyx":6
  * # Cython extension for fast text processing
- * 
+ *
  * def cython_clean_text(str text):             # <<<<<<<<<<<<<<
  *     """Fast text cleaning using Cython."""
  *     cdef list words = text.split()
@@ -2873,7 +2873,7 @@ __Pyx_RefNannySetupContext("PyInit_text_utils", 0);
   /* "text_utils.pyx":1
  * # SPDX-FileCopyrightText: Copyright (c) 2025 Niladri Das <bniladridas>             # <<<<<<<<<<<<<<
  * # SPDX-License-Identifier: MIT
- * 
+ *
 */
   __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -3055,12 +3055,12 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_InitGlobals(void) {
   /* PythonCompatibility.init */
   if (likely(__Pyx_init_co_variables() == 0)); else
-  
+
   if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1, __pyx_L1_error)
 
   /* CommonTypesMetaclass.init */
   if (likely(__pyx_CommonTypesMetaclass_init(__pyx_m) == 0)); else
-  
+
   if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1, __pyx_L1_error)
 
   /* CachedMethodType.init */
@@ -3074,12 +3074,12 @@ static int __Pyx_InitGlobals(void) {
       }
   } // error handling follows
   #endif
-  
+
   if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1, __pyx_L1_error)
 
   /* CythonFunctionShared.init */
   if (likely(__pyx_CyFunction_init(__pyx_m) == 0)); else
-  
+
   if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1, __pyx_L1_error)
 
   return 0;

@@ -21,10 +21,10 @@ The current `README.md` for **Vortai** is comprehensive but has grown to include
 
 A clear and consistent README improves:
 
-- onboarding for new contributors  
-- overall project professionalism  
-- maintainability of documentation  
-- searchability for users looking for specific instructions  
+- onboarding for new contributors
+- overall project professionalism
+- maintainability of documentation
+- searchability for users looking for specific instructions
 
 Given the size and scope of Vortai (multi-language SDK, web app, TTS, image generation, CI/CD), the README will benefit from consolidation and consistent hierarchy.
 
@@ -39,10 +39,10 @@ Given the size and scope of Vortai (multi-language SDK, web app, TTS, image gene
 
 Would the maintainers be open to a cleanup PR that:
 
-1. Removes duplicated sections  
-2. Reorganizes the README into a clear structure  
-3. Moves extended examples into `docs/`  
-4. Preserves all content but streamlines the presentation  
+1. Removes duplicated sections
+2. Reorganizes the README into a clear structure
+3. Moves extended examples into `docs/`
+4. Preserves all content but streamlines the presentation
 
 If approved, I can submit a PR to implement this cleanup.
 
