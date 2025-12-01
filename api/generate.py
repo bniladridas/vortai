@@ -1,4 +1,4 @@
-from flask import jsonify
+import json
 from dotenv import load_dotenv
 from vortai import GeminiAI
 
@@ -8,20 +8,41 @@ load_dotenv()
 ai = GeminiAI()
 
 
-def handler(request):
-    """Generate text response."""
+def handler(event, context):
+    """Generate text response for Vercel serverless."""
     try:
-        data = request.get_json()
+        # Parse the request body
+        if isinstance(event.get("body"), str):
+            data = json.loads(event["body"])
+        else:
+            data = event.get("body", {})
+
         prompt = data.get("prompt", "").strip()
 
         if not prompt:
-            return jsonify({"error": "No prompt provided"}), 400
+            return {
+                "statusCode": 400,
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps({"error": "No prompt provided"}),
+            }
 
         if len(prompt) > 5000:
-            return jsonify({"error": "Prompt too long (max 5000 chars)"}), 400
+            return {
+                "statusCode": 400,
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps({"error": "Prompt too long (max 5000 chars)"}),
+            }
 
         response = ai.generate_text(prompt)
-        return jsonify({"response": response})
+        return {
+            "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps({"response": response}),
+        }
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return {
+            "statusCode": 500,
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps({"error": str(e)}),
+        }
