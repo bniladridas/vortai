@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+// SPDX-FileCopyrightText: Copyright (c) 2025 Niladri Das <bniladridas>
+// SPDX-License-Identifier: MIT
 
 interface TTSButtonProps {
   text: string;

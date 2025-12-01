@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+// SPDX-FileCopyrightText: Copyright (c) 2025 Niladri Das <bniladridas>
+// SPDX-License-Identifier: MIT
 
 interface SearchInterfaceProps {
   onResponse: (content: string) => void;

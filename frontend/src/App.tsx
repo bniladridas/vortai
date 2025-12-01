@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+// SPDX-FileCopyrightText: Copyright (c) 2025 Niladri Das <bniladridas>
+// SPDX-License-Identifier: MIT
+
 import SearchInterface from './components/SearchInterface';
 import ResponseContainer from './components/ResponseContainer';
 import ThinkingContainer from './components/ThinkingContainer';

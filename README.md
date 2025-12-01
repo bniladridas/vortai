@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Copyright (c) 2025 Niladri Das <bniladridas>
+SPDX-License-Identifier: MIT
+-->
+
 # Vortai
 
 [![Python Version](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
