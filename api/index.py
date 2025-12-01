@@ -20,54 +20,55 @@ class Handler(BaseHTTPRequestHandler):
         """Handle POST requests."""
         # Get the path and query parameters
         path = self.path
-        method = 'generate'  # default
+        method = "generate"  # default
 
-        if '?' in path:
-            path_part, query_part = path.split('?', 1)
+        if "?" in path:
+            path_part, query_part = path.split("?", 1)
             # Parse query parameters
             from urllib.parse import parse_qs
+
             query_params = parse_qs(query_part)
-            method = query_params.get('method', ['generate'])[0]
+            method = query_params.get("method", ["generate"])[0]
 
         # Read request body
-        content_length = int(self.headers.get('Content-Length', 0))
+        content_length = int(self.headers.get("Content-Length", 0))
         if content_length > 0:
-            body = self.rfile.read(content_length).decode('utf-8')
+            body = self.rfile.read(content_length).decode("utf-8")
             try:
                 data = json.loads(body)
-            except:
+            except json.JSONDecodeError:
                 data = {}
         else:
             data = {}
 
         # Route to appropriate handler
-        if method == 'generate':
+        if method == "generate":
             response = self._generate(data)
-        elif method == 'generate_with_thinking':
+        elif method == "generate_with_thinking":
             response = self._generate_with_thinking(data)
-        elif method == 'generate_with_url_context':
+        elif method == "generate_with_url_context":
             response = self._generate_with_url_context(data)
-        elif method == 'text_to_speech':
+        elif method == "text_to_speech":
             response = self._text_to_speech(data)
-        elif method == 'generate_image':
+        elif method == "generate_image":
             response = self._generate_image(data)
         else:
             response = {
-                'statusCode': 400,
-                'headers': {'Content-Type': 'application/json'},
-                'body': json.dumps({"error": "Unknown method"})
+                "statusCode": 400,
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps({"error": "Unknown method"}),
             }
 
         # Send response
-        self.send_response(response['statusCode'])
-        for header, value in response['headers'].items():
+        self.send_response(response["statusCode"])
+        for header, value in response["headers"].items():
             self.send_header(header, value)
         self.end_headers()
 
-        if 'isBase64Encoded' in response and response['isBase64Encoded']:
-            self.wfile.write(base64.b64decode(response['body']))
+        if "isBase64Encoded" in response and response["isBase64Encoded"]:
+            self.wfile.write(base64.b64decode(response["body"]))
         else:
-            self.wfile.write(response['body'].encode('utf-8'))
+            self.wfile.write(response["body"].encode("utf-8"))
 
     def _generate(self, data):
         """Generate text response."""
@@ -76,30 +77,30 @@ class Handler(BaseHTTPRequestHandler):
 
             if not prompt:
                 return {
-                    'statusCode': 400,
-                    'headers': {'Content-Type': 'application/json'},
-                    'body': json.dumps({"error": "No prompt provided"})
+                    "statusCode": 400,
+                    "headers": {"Content-Type": "application/json"},
+                    "body": json.dumps({"error": "No prompt provided"}),
                 }
 
             if len(prompt) > 5000:
                 return {
-                    'statusCode': 400,
-                    'headers': {'Content-Type': 'application/json'},
-                    'body': json.dumps({"error": "Prompt too long (max 5000 chars)"})
+                    "statusCode": 400,
+                    "headers": {"Content-Type": "application/json"},
+                    "body": json.dumps({"error": "Prompt too long (max 5000 chars)"}),
                 }
 
             response = ai.generate_text(prompt)
             return {
-                'statusCode': 200,
-                'headers': {'Content-Type': 'application/json'},
-                'body': json.dumps({"response": response})
+                "statusCode": 200,
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps({"response": response}),
             }
 
         except Exception as e:
             return {
-                'statusCode': 500,
-                'headers': {'Content-Type': 'application/json'},
-                'body': json.dumps({"error": str(e)})
+                "statusCode": 500,
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps({"error": str(e)}),
             }
 
     def _generate_with_thinking(self, data):
@@ -109,30 +110,30 @@ class Handler(BaseHTTPRequestHandler):
 
             if not prompt:
                 return {
-                    'statusCode': 400,
-                    'headers': {'Content-Type': 'application/json'},
-                    'body': json.dumps({"error": "No prompt provided"})
+                    "statusCode": 400,
+                    "headers": {"Content-Type": "application/json"},
+                    "body": json.dumps({"error": "No prompt provided"}),
                 }
 
             if len(prompt) > 5000:
                 return {
-                    'statusCode': 400,
-                    'headers': {'Content-Type': 'application/json'},
-                    'body': json.dumps({"error": "Prompt too long (max 5000 chars)"})
+                    "statusCode": 400,
+                    "headers": {"Content-Type": "application/json"},
+                    "body": json.dumps({"error": "Prompt too long (max 5000 chars)"}),
                 }
 
             result = ai.generate_text_with_thinking(prompt)
             return {
-                'statusCode': 200,
-                'headers': {'Content-Type': 'application/json'},
-                'body': json.dumps(result)
+                "statusCode": 200,
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps(result),
             }
 
         except Exception as e:
             return {
-                'statusCode': 500,
-                'headers': {'Content-Type': 'application/json'},
-                'body': json.dumps({"error": str(e)})
+                "statusCode": 500,
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps({"error": str(e)}),
             }
 
     def _generate_with_url_context(self, data):
@@ -142,30 +143,30 @@ class Handler(BaseHTTPRequestHandler):
 
             if not prompt:
                 return {
-                    'statusCode': 400,
-                    'headers': {'Content-Type': 'application/json'},
-                    'body': json.dumps({"error": "No prompt provided"})
+                    "statusCode": 400,
+                    "headers": {"Content-Type": "application/json"},
+                    "body": json.dumps({"error": "No prompt provided"}),
                 }
 
             if len(prompt) > 5000:
                 return {
-                    'statusCode': 400,
-                    'headers': {'Content-Type': 'application/json'},
-                    'body': json.dumps({"error": "Prompt too long (max 5000 chars)"})
+                    "statusCode": 400,
+                    "headers": {"Content-Type": "application/json"},
+                    "body": json.dumps({"error": "Prompt too long (max 5000 chars)"}),
                 }
 
             response = ai.generate_text_with_url_context(prompt)
             return {
-                'statusCode': 200,
-                'headers': {'Content-Type': 'application/json'},
-                'body': json.dumps({"response": response})
+                "statusCode": 200,
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps({"response": response}),
             }
 
         except Exception as e:
             return {
-                'statusCode': 500,
-                'headers': {'Content-Type': 'application/json'},
-                'body': json.dumps({"error": str(e)})
+                "statusCode": 500,
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps({"error": str(e)}),
             }
 
     def _text_to_speech(self, data):
@@ -175,30 +176,32 @@ class Handler(BaseHTTPRequestHandler):
 
             if not text:
                 return {
-                    'statusCode': 400,
-                    'headers': {'Content-Type': 'application/json'},
-                    'body': json.dumps({"error": "No text provided"})
+                    "statusCode": 400,
+                    "headers": {"Content-Type": "application/json"},
+                    "body": json.dumps({"error": "No text provided"}),
                 }
 
             if len(text) > 1000:
                 return {
-                    'statusCode': 400,
-                    'headers': {'Content-Type': 'application/json'},
-                    'body': json.dumps({"error": "Text too long (max 1000 chars)"})
+                    "statusCode": 400,
+                    "headers": {"Content-Type": "application/json"},
+                    "body": json.dumps({"error": "Text too long (max 1000 chars)"}),
                 }
 
             filepath = ai.text_to_speech(text)
 
             # Prevent path traversal
-            if not os.path.commonpath([os.path.abspath(tempfile.gettempdir()), os.path.abspath(filepath)]) == os.path.abspath(tempfile.gettempdir()):
+            if not os.path.commonpath(
+                [os.path.abspath(tempfile.gettempdir()), os.path.abspath(filepath)]
+            ) == os.path.abspath(tempfile.gettempdir()):
                 return {
-                    'statusCode': 400,
-                    'headers': {'Content-Type': 'application/json'},
-                    'body': json.dumps({"error": "Invalid file path"})
+                    "statusCode": 400,
+                    "headers": {"Content-Type": "application/json"},
+                    "body": json.dumps({"error": "Invalid file path"}),
                 }
 
             # Read the file and return as base64
-            with open(filepath, 'rb') as f:
+            with open(filepath, "rb") as f:
                 audio_data = f.read()
 
             # Clean up the file
@@ -208,20 +211,20 @@ class Handler(BaseHTTPRequestHandler):
                 pass
 
             return {
-                'statusCode': 200,
-                'headers': {
-                    'Content-Type': 'audio/mp3',
-                    'Content-Disposition': 'attachment; filename="tts_audio.mp3"'
+                "statusCode": 200,
+                "headers": {
+                    "Content-Type": "audio/mp3",
+                    "Content-Disposition": 'attachment; filename="tts_audio.mp3"',
                 },
-                'body': base64.b64encode(audio_data).decode('utf-8'),
-                'isBase64Encoded': True
+                "body": base64.b64encode(audio_data).decode("utf-8"),
+                "isBase64Encoded": True,
             }
 
         except Exception as e:
             return {
-                'statusCode': 500,
-                'headers': {'Content-Type': 'application/json'},
-                'body': json.dumps({"error": str(e)})
+                "statusCode": 500,
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps({"error": str(e)}),
             }
 
     def _generate_image(self, data):
@@ -231,26 +234,28 @@ class Handler(BaseHTTPRequestHandler):
 
             if not prompt:
                 return {
-                    'statusCode': 400,
-                    'headers': {'Content-Type': 'application/json'},
-                    'body': json.dumps({"error": "No prompt provided"})
+                    "statusCode": 400,
+                    "headers": {"Content-Type": "application/json"},
+                    "body": json.dumps({"error": "No prompt provided"}),
                 }
 
             if len(prompt) > 5000:
                 return {
-                    'statusCode': 400,
-                    'headers': {'Content-Type': 'application/json'},
-                    'body': json.dumps({"error": "Prompt too long (max 5000 chars)"})
+                    "statusCode": 400,
+                    "headers": {"Content-Type": "application/json"},
+                    "body": json.dumps({"error": "Prompt too long (max 5000 chars)"}),
                 }
 
             filepath = ai.generate_image(prompt)
 
             # Prevent path traversal
-            if not os.path.commonpath([os.path.abspath(tempfile.gettempdir()), os.path.abspath(filepath)]) == os.path.abspath(tempfile.gettempdir()):
+            if not os.path.commonpath(
+                [os.path.abspath(tempfile.gettempdir()), os.path.abspath(filepath)]
+            ) == os.path.abspath(tempfile.gettempdir()):
                 return {
-                    'statusCode': 400,
-                    'headers': {'Content-Type': 'application/json'},
-                    'body': json.dumps({"error": "Invalid file path"})
+                    "statusCode": 400,
+                    "headers": {"Content-Type": "application/json"},
+                    "body": json.dumps({"error": "Invalid file path"}),
                 }
 
             # Detect mime type
@@ -259,7 +264,7 @@ class Handler(BaseHTTPRequestHandler):
                 mime_type = "image/png"
 
             # Read the file and return as base64
-            with open(filepath, 'rb') as f:
+            with open(filepath, "rb") as f:
                 image_data = f.read()
 
             # Clean up the file
@@ -269,18 +274,18 @@ class Handler(BaseHTTPRequestHandler):
                 pass
 
             return {
-                'statusCode': 200,
-                'headers': {
-                    'Content-Type': mime_type,
-                    'Content-Disposition': 'inline; filename="generated_image.png"'
+                "statusCode": 200,
+                "headers": {
+                    "Content-Type": mime_type,
+                    "Content-Disposition": 'inline; filename="generated_image.png"',
                 },
-                'body': base64.b64encode(image_data).decode('utf-8'),
-                'isBase64Encoded': True
+                "body": base64.b64encode(image_data).decode("utf-8"),
+                "isBase64Encoded": True,
             }
 
         except Exception as e:
             return {
-                'statusCode': 500,
-                'headers': {'Content-Type': 'application/json'},
-                'body': json.dumps({"error": str(e)})
+                "statusCode": 500,
+                "headers": {"Content-Type": "application/json"},
+                "body": json.dumps({"error": str(e)}),
             }
