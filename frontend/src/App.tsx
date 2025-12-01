@@ -6,8 +6,6 @@ import ThinkingContainer from './components/ThinkingContainer';
 import ImageContainer from './components/ImageContainer';
 import TTSButton from './components/TTSButton';
 import AudioPlayer from './components/AudioPlayer';
-import SidebarMenu from './components/SidebarMenu';
-import MenuOverlay from './components/MenuOverlay';
 import CookieNotification from './components/CookieNotification';
 
 function App() {
@@ -15,12 +13,11 @@ function App() {
   const [thinking, setThinking] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [audioUrl, setAudioUrl] = useState('');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showCookies, setShowCookies] = useState(true);
 
   return (
     <div className="app-container">
-      <Header onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
+      <Header />
 
       <main className="main-content">
         <section className="title-section">
@@ -48,9 +45,6 @@ function App() {
 
         {imageUrl && <ImageContainer imageUrl={imageUrl} />}
       </main>
-
-      <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-      <MenuOverlay isVisible={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       {showCookies && (
         <CookieNotification onAccept={() => setShowCookies(false)} />

@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 
-interface HeaderProps {
-  onMenuToggle: () => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
+const Header: React.FC = () => {
   const [isDark, setIsDark] = useState(true);
 
   const toggleTheme = () => {
@@ -29,14 +25,6 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
           aria-label="Toggle theme"
         >
           {isDark ? '☀️' : '🌙'}
-        </button>
-
-        <button
-          onClick={onMenuToggle}
-          style={{ padding: '0.5rem', background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer' }}
-          aria-label="Open menu"
-        >
-          ⋯
         </button>
       </div>
     </header>
