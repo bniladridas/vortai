@@ -1,6 +1,6 @@
 [project]
 name = "vortai"
-version = "0.0.0"
+version = "0.0.1"
 license = "MIT"
 requires-python = ">=3.9"
 dependencies = [
