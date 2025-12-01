@@ -37,10 +37,9 @@ const TTSButton: React.FC<TTSButtonProps> = ({ text, onAudio }) => {
     <button
       onClick={handleTTS}
       disabled={isLoading}
-      className="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:bg-gray-600 transition-colors"
+      className={`button button-secondary ${isLoading ? 'loading' : ''}`}
     >
-      <i className="fas fa-volume-up mr-2"></i>
-      {isLoading ? 'Generating...' : 'Listen'}
+      {isLoading ? '🔄 Generating...' : '🔊 Listen'}
     </button>
   );
 };

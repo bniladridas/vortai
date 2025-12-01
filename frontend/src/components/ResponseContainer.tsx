@@ -8,9 +8,20 @@ const ResponseContainer: React.FC<ResponseContainerProps> = ({ content }) => {
   if (!content) return null;
 
   return (
-    <div className="mb-6 p-6 bg-gray-800 rounded-lg border border-gray-700">
+    <div className="response-container">
+      <h3 style={{
+        margin: '0 0 1rem 0',
+        fontSize: '1.125rem',
+        fontWeight: '600',
+        color: 'var(--primary)'
+      }}>
+        🤖 Response
+      </h3>
       <div
-        className="prose prose-invert max-w-none"
+        style={{
+          lineHeight: '1.7',
+          color: 'var(--text-secondary)'
+        }}
         dangerouslySetInnerHTML={{ __html: content }}
       />
     </div>

@@ -8,9 +8,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
   if (!src) return null;
 
   return (
-    <audio controls className="w-full mb-4">
-      <source src={src} type="audio/mp3" />
-    </audio>
+    <div className="audio-player">
+      <audio controls style={{ width: '100%', borderRadius: '8px' }}>
+        <source src={src} type="audio/mp3" />
+        Your browser does not support the audio element.
+      </audio>
+    </div>
   );
 };
 

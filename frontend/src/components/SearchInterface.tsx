@@ -175,8 +175,8 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
 
   return (
     <div className="search-container">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-        <div style={{ color: '#9ca3af' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+        <div style={{ color: 'var(--text-secondary)', fontSize: '1.25rem' }}>
           🔍
         </div>
 
@@ -196,11 +196,13 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
             background: 'transparent',
             border: 'none',
             outline: 'none',
-            color: 'white',
+            color: 'var(--text)',
             resize: 'none',
             minHeight: '24px',
             maxHeight: '120px',
-            overflowY: 'auto'
+            overflowY: 'auto',
+            fontSize: '1rem',
+            lineHeight: '1.5'
           }}
           rows={1}
         />
@@ -208,14 +210,12 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <button
             onClick={() => setInput('')}
+            className="button button-outline"
             style={{
               padding: '0.5rem',
-              background: 'none',
-              border: 'none',
-              color: '#9ca3af',
-              cursor: 'pointer',
               opacity: input ? 1 : 0,
-              pointerEvents: input ? 'auto' : 'none'
+              pointerEvents: input ? 'auto' : 'none',
+              minWidth: 'auto'
             }}
           >
             ✕
@@ -224,32 +224,26 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
           <button
             onClick={handleSubmit}
             disabled={isLoading || !input.trim()}
-            className="button button-primary"
-            style={{
-              padding: '0.75rem',
-              opacity: isLoading || !input.trim() ? 0.5 : 1,
-              cursor: isLoading || !input.trim() ? 'not-allowed' : 'pointer'
-            }}
+            className={`button button-primary ${isLoading ? 'loading' : ''}`}
+            style={{ padding: '0.75rem' }}
           >
-            {isLoading ? '⏳' : '➤'}
+            {isLoading ? '⏳' : '🚀'}
           </button>
         </div>
       </div>
 
       {!input && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.5rem' }}>
           {getCurrentSuggestions().map((suggestion, index) => (
             <button
               key={index}
               onClick={() => handleSuggestionClick(suggestion)}
+              className="button button-outline"
               style={{
-                padding: '0.375rem 0.75rem',
-                backgroundColor: '#374151',
-                color: '#d1d5db',
-                border: 'none',
-                borderRadius: '9999px',
-                fontSize: '14px',
-                cursor: 'pointer'
+                padding: '0.5rem 1rem',
+                fontSize: '0.875rem',
+                borderRadius: '20px',
+                background: 'var(--surface-hover)'
               }}
             >
               {suggestion}
@@ -258,26 +252,25 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: '0.25rem' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
         {tabs.map((tab) => (
           <button
             key={`${tab.mode}-${tab.style}`}
             onClick={() => setActiveTab({ mode: tab.mode, style: tab.style })}
+            className={`button ${activeTab.mode === tab.mode && activeTab.style === tab.style ? 'button-primary' : 'button-outline'}`}
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '0.5rem',
-              padding: '0.5rem 1rem',
-              backgroundColor: activeTab.mode === tab.mode && activeTab.style === tab.style ? '#dc2626' : 'transparent',
-              color: activeTab.mode === tab.mode && activeTab.style === tab.style ? 'white' : '#9ca3af',
-              border: 'none',
-              borderRadius: '0.5rem',
-              fontSize: '14px',
+              padding: '0.75rem 1.25rem',
+              fontSize: '0.875rem',
               fontWeight: '500',
-              cursor: 'pointer'
+              minWidth: 'auto'
             }}
           >
-            <div style={{ width: '16px', height: '16px' }}>{tab.icon}</div>
+            <div style={{ width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {tab.icon}
+            </div>
             {tab.label}
           </button>
         ))}

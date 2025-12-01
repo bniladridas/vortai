@@ -8,19 +8,34 @@ const ImageContainer: React.FC<ImageContainerProps> = ({ imageUrl }) => {
   if (!imageUrl) return null;
 
   return (
-    <div className="mb-6 p-4 bg-gray-800 rounded-lg border border-gray-700">
+    <div className="image-container">
+      <h3 style={{
+        margin: '0 0 1rem 0',
+        fontSize: '1.125rem',
+        fontWeight: '600',
+        color: 'var(--secondary)',
+        textAlign: 'center'
+      }}>
+        🎨 Generated Image
+      </h3>
       <img
         src={imageUrl}
         alt="AI generated content"
-        className="max-w-full h-auto rounded-lg"
+        style={{
+          maxWidth: '100%',
+          height: 'auto',
+          borderRadius: '8px',
+          marginBottom: '1rem',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
+        }}
       />
-      <div className="mt-4 flex gap-2">
+      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
         <a
           href={imageUrl}
           download="generated_image.png"
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+          className="button button-secondary"
         >
-          Download
+          📥 Download
         </a>
       </div>
     </div>

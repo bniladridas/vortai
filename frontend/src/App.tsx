@@ -23,7 +23,10 @@ function App() {
       <Header onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
 
       <main className="main-content">
-        <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '2rem', textAlign: 'center' }}>Vortai</h1>
+        <section className="title-section">
+          <h1>Vortai</h1>
+          <p>Advanced AI platform with web search, text generation, and creative tools</p>
+        </section>
 
         <SearchInterface
           onResponse={setResponse}
@@ -32,13 +35,18 @@ function App() {
           onAudio={setAudioUrl}
         />
 
-        <ResponseContainer content={response} />
-        <ThinkingContainer content={thinking} />
+        {response && <ResponseContainer content={response} />}
 
-        <TTSButton text={response} onAudio={setAudioUrl} />
-        <AudioPlayer src={audioUrl} />
+        {thinking && <ThinkingContainer content={thinking} />}
 
-        <ImageContainer imageUrl={imageUrl} />
+        {(response || audioUrl) && (
+          <div className="media-controls">
+            <TTSButton text={response} onAudio={setAudioUrl} />
+            <AudioPlayer src={audioUrl} />
+          </div>
+        )}
+
+        {imageUrl && <ImageContainer imageUrl={imageUrl} />}
       </main>
 
       <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
