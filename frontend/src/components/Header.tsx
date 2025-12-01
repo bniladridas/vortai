@@ -10,14 +10,6 @@ const Header: React.FC = () => {
 
   return (
     <header className="header">
-      <div>
-        <img
-          src="/logo.png"
-          alt="Vortai Logo"
-          style={{ width: '40px', height: '40px', borderRadius: '50%' }}
-        />
-      </div>
-
       <div style={{ display: 'flex', gap: '0.5rem' }}>
         <button
           onClick={toggleTheme}
