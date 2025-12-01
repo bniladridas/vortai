@@ -25,6 +25,7 @@ runs:
         echo "NEW_VERSION=$new" >> $GITHUB_ENV
       shell: bash
     - name: Create PR
+      id: create-pr
       uses: peter-evans/create-pull-request@v6
       with:
         token: ${{ inputs.token }}
@@ -39,6 +40,27 @@ runs:
         labels: |
           automated
           version-bump
+    - name: Update PR description
+      run: |
+        # Generate updated PR description with actual changes
+        changes=$(git log --oneline --pretty=format:"- %s" HEAD~1..HEAD | grep -v "fix: pre-commit" | grep -v "feat: add pre-commit" | head -10)
+        pr_body="This PR prepares a new release (v${{ env.NEW_VERSION }}).
+
+        ## Changes Included
+        $changes
+
+        ## Automated Updates
+        - Increments patch version
+        - Updates VERSION, __init__.py, pyproject.toml
+
+        ---
+        *This PR was auto-generated. Review changes before merging.*"
+
+        # Update the PR description using GitHub CLI
+        gh pr edit ${{ steps.create-pr.outputs.pull-request-number }} --body "$pr_body"
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.token }}
     - name: Create tag
       run: |
         if ! git ls-remote --tags origin | grep -q "refs/tags/v${{ env.NEW_VERSION }}"; then
