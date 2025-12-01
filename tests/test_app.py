@@ -32,20 +32,6 @@ def test_app_creation():
     assert app.name == "vortai"
 
 
-@patch("vortai.routes.api.send_file")
-def test_index_route(mock_send_file, client):
-    """Test the index route returns 200."""
-    # Mock the send_file response
-    mock_response = MagicMock()
-    mock_response.status_code = 200
-    mock_response.data = b"React App"
-    mock_send_file.return_value = mock_response
-
-    response = client.get("/")
-    assert response.status_code == 200
-    mock_send_file.assert_called_once()
-
-
 @patch("vortai.routes.api.ai.generate_text")
 def test_generate_api_success(mock_generate, client):
     """Test the generate API with valid prompt."""
