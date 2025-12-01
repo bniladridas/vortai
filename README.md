@@ -75,19 +75,25 @@ cd frontend && npm install
 
 2. **Choose your interface:**
 
-   **Option A: React Interface (Recommended)**
+   **Option A: Vercel Static Interface (Production)**
+   ```bash
+   # Deployed at: https://vortai.vercel.app
+   # Features: Static HTML interface with full API integration
+   ```
+
+   **Option B: React Interface (Development)**
    ```bash
    make run              # React interface on port 8000
    # Visit: http://localhost:8000
    ```
 
-   **Option B: Static Web Interface**
+   **Option C: Static Web Interface (Development)**
    ```bash
    make run-static       # Static interface on port 5001
    # Visit: http://localhost:5001
    ```
 
-   **Option C: Both Interfaces**
+   **Option D: Both Interfaces (Development)**
    ```bash
    ./run-dev.sh interfaces
    # React: http://localhost:8000

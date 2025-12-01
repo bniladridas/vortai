@@ -2,11 +2,12 @@
   "version": 2,
   "builds": [
     {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "build"
-      }
+      "src": "web/static/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "web/templates/index.html",
+      "use": "@vercel/static"
     },
     {
       "src": "app.py",
@@ -19,8 +20,12 @@
       "dest": "/app.py"
     },
     {
+      "src": "/static/(.*)",
+      "dest": "/web/static/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/frontend/$1"
+      "dest": "/web/templates/index.html"
     }
   ]
 }
