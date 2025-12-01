@@ -48,4 +48,6 @@ jobs:
         with:
           fetch-depth: 0  # Full history for version bumping
       - name: Handle release
-        uses: ./.github/actions/release  # Composite action for release process
+        uses: ./.github/actions/release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # Composite action for release process

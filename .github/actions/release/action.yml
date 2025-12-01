@@ -7,6 +7,10 @@
 
 name: 'Handle Release'
 description: 'Bump version, create PR, tag, and release'
+inputs:
+  token:
+    description: GitHub token for API access
+    required: true
 runs:
   using: 'composite'
   steps:
@@ -23,7 +27,7 @@ runs:
     - name: Create PR
       uses: peter-evans/create-pull-request@v6
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ inputs.token }}
         branch: automated/version-bump
         title: "Automated version bump"
         body: |
