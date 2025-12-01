@@ -29,6 +29,23 @@ cd vortai
 
 This installs all dependencies, builds extensions, and sets up the development environment.
 
+### Starting Services
+
+Use the development manager to start services:
+
+```bash
+# Start all services
+./run-dev.sh all
+
+# Start individual services
+./run-dev.sh backend    # Flask API server (port 8000)
+./run-dev.sh frontend   # React UI (port 3000)
+./run-dev.sh go         # Go text processor (port 8080)
+
+# Show help
+./run-dev.sh help
+```
+
 ### Manual Installation
 
 ```bash
@@ -254,9 +271,11 @@ uv run black .     # Format Python files
 make test          # Run all tests
 uv run pytest tests/ --cov=vortai  # With coverage
 
-# Development server
-make run           # Start Flask development server
-cd frontend && npm start  # Start React dev server
+# Development services
+./run-dev.sh all           # Start all services
+./run-dev.sh backend       # Flask API only (port 8000)
+./run-dev.sh frontend      # React UI only (port 3000)
+./run-dev.sh go           # Go processor only (port 8080)
 
 # Building extensions
 uv run cythonize -i cython_ext/text_utils.pyx  # Build Cython
