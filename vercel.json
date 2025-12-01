@@ -6,14 +6,30 @@
       "use": "@vercel/static"
     },
     {
-      "src": "app.py",
+      "src": "api/**/*.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/app.py"
+      "src": "/api/generate",
+      "dest": "/api/generate.py"
+    },
+    {
+      "src": "/api/generate-with-thinking",
+      "dest": "/api/generate-with-thinking.py"
+    },
+    {
+      "src": "/api/generate-with-url-context",
+      "dest": "/api/generate-with-url-context.py"
+    },
+    {
+      "src": "/api/text-to-speech",
+      "dest": "/api/text-to-speech.py"
+    },
+    {
+      "src": "/api/generate-image",
+      "dest": "/api/generate-image.py"
     },
     {
       "src": "/(.*)",
