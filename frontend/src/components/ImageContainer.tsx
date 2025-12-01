@@ -24,7 +24,7 @@ const ImageContainer: React.FC<ImageContainerProps> = ({ imageUrl }) => {
           download="generated_image.png"
           className="button button-outline"
         >
-          Download
+          Save
         </a>
       </div>
     </div>

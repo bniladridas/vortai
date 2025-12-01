@@ -176,8 +176,8 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
   return (
     <div className="search-container">
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-        <div style={{ color: 'var(--text-secondary)', fontSize: '1.25rem' }}>
-          🔍
+        <div style={{ color: 'var(--text-secondary)', fontSize: '1rem', fontWeight: '500' }}>
+          Search
         </div>
 
         <textarea
@@ -218,7 +218,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
               minWidth: 'auto'
             }}
           >
-            ✕
+            ×
           </button>
 
           <button
@@ -227,7 +227,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
             className={`button button-primary ${isLoading ? 'loading' : ''}`}
             style={{ padding: '0.75rem' }}
           >
-            {isLoading ? '⏳' : '🚀'}
+            {isLoading ? '...' : 'Go'}
           </button>
         </div>
       </div>

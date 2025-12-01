@@ -39,7 +39,7 @@ const TTSButton: React.FC<TTSButtonProps> = ({ text, onAudio }) => {
       disabled={isLoading}
       className={`button button-secondary ${isLoading ? 'loading' : ''}`}
     >
-      {isLoading ? '🔄 Generating...' : '🔊 Listen'}
+      {isLoading ? 'Generating...' : 'Listen'}
     </button>
   );
 };
