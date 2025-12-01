@@ -125,7 +125,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
         console.log('📡 Calling endpoint:', endpoint);
         console.log('📝 Request payload:', { prompt: input });
 
-        const response = await fetch(endpoint, {
+        const response = await fetch(`http://localhost:8000${endpoint}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prompt: input })
@@ -152,7 +152,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
       } else if (activeTab.mode === 'image') {
         console.log('🎨 Calling image generation endpoint');
 
-        const response = await fetch('/api/generate-image', {
+        const response = await fetch('http://localhost:8000/api/generate-image', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prompt: input })

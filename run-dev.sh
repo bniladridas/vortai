@@ -59,7 +59,7 @@ FRONTEND_PID=$!
 echo ""
 echo "✅ All services started!"
 echo "🐹 Go Service: http://localhost:8080"
-echo "🔧 Backend: http://localhost:5000"
+echo "🔧 Backend: http://localhost:8000"
 echo "📱 Frontend: http://localhost:3000"
 echo ""
 echo "Press Ctrl+C to stop all services"
