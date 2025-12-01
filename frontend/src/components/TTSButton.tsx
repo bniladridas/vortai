@@ -11,7 +11,9 @@ const TTSButton: React.FC<TTSButtonProps> = ({ text, onAudio }) => {
   const handleTTS = async () => {
     if (!text.trim()) return;
 
+    console.log('🔊 Starting TTS for text:', text.substring(0, 50) + '...');
     setIsLoading(true);
+
     try {
       const response = await fetch('/api/text-to-speech', {
         method: 'POST',
@@ -19,15 +21,23 @@ const TTSButton: React.FC<TTSButtonProps> = ({ text, onAudio }) => {
         body: JSON.stringify({ text })
       });
 
+      console.log('📊 TTS response status:', response.status);
+
       if (response.ok) {
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
         onAudio(url);
+        console.log('✅ TTS audio generated successfully');
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('❌ TTS error:', errorData.error);
+        throw new Error(errorData.error || 'TTS failed');
       }
     } catch (error) {
-      console.error('TTS error:', error);
+      console.error('💥 TTS failed:', error);
     } finally {
       setIsLoading(false);
+      console.log('🏁 TTS completed');
     }
   };
 

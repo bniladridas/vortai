@@ -112,6 +112,8 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
     setIsLoading(true);
 
     try {
+      console.log('🚀 Starting API call for:', activeTab);
+
       if (activeTab.mode === 'text') {
         let endpoint = '/api/generate';
         if (activeTab.style === 'thinking') {
@@ -120,26 +122,43 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
           endpoint = '/api/generate-with-url-context';
         }
 
+        console.log('📡 Calling endpoint:', endpoint);
+        console.log('📝 Request payload:', { prompt: input });
+
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prompt: input })
         });
 
-        const data = await response.json();
+        console.log('📊 Response status:', response.status);
 
-        if (activeTab.style === 'thinking') {
-          onThinking(data.thinking_summary?.join('\n') || '');
-          onResponse(data.response || '');
+        const data = await response.json();
+        console.log('📄 Response data:', data);
+
+        if (response.ok) {
+          if (activeTab.style === 'thinking') {
+            onThinking(data.thinking_summary?.join('\n') || '');
+            onResponse(data.response || '');
+            console.log('✅ Thinking response processed');
+          } else {
+            onResponse(data.response || '');
+            console.log('✅ Text response processed');
+          }
         } else {
-          onResponse(data.response || '');
+          console.error('❌ API error:', data.error);
+          throw new Error(data.error || 'API request failed');
         }
       } else if (activeTab.mode === 'image') {
+        console.log('🎨 Calling image generation endpoint');
+
         const response = await fetch('/api/generate-image', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prompt: input })
         });
+
+        console.log('📊 Image response status:', response.status);
 
         // For images, the backend returns a file download
         if (response.ok) {
@@ -147,12 +166,19 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({
           const blob = await response.blob();
           const url = URL.createObjectURL(blob);
           onImage(url);
+          console.log('✅ Image generated successfully');
+        } else {
+          const errorData = await response.json().catch(() => ({}));
+          console.error('❌ Image generation error:', errorData.error);
+          throw new Error(errorData.error || 'Image generation failed');
         }
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('💥 API call failed:', error);
+      // You could show a user-friendly error message here
     } finally {
       setIsLoading(false);
+      console.log('🏁 API call completed');
     }
   };
 
