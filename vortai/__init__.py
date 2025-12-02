@@ -35,6 +35,16 @@ def create_app():
 
     app.register_blueprint(api_bp)
 
+    # Serve React build for root route
+    @app.route("/")
+    def index():
+        from flask import send_file
+        import os
+
+        return send_file(
+            os.path.join(os.path.dirname(__file__), "../frontend/build/index.html")
+        )
+
     @app.after_request
     def add_security_headers(response):
         response.headers["X-Content-Type-Options"] = "nosniff"
