@@ -13,31 +13,9 @@ runs:
     - name: Install uv
       run: curl -LsSf https://astral.sh/uv/install.sh | sh
       shell: bash
-     - name: Run integration test
-       run: |
-         uv run python -c "
-         from app import create_app
-         app = create_app()
-         client = app.test_client()
-         response = client.get(/
-         assert response.status_code == 200
-         print('Integration test passed: Root endpoint responds')
-         "
-       shell: bash
     - name: Sync dependencies
       run: uv sync
       shell: bash
-     - name: Run integration test
-       run: |
-         uv run python -c "
-         from app import create_app
-         app = create_app()
-         client = app.test_client()
-         response = client.get(/
-         assert response.status_code == 200
-         print('Integration test passed: Root endpoint responds')
-         "
-       shell: bash
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
@@ -48,70 +26,26 @@ runs:
         npm install
         npm run build
       shell: bash
-     - name: Run integration test
-       run: |
-         uv run python -c "
-         from app import create_app
-         app = create_app()
-         client = app.test_client()
-         response = client.get(/
-         assert response.status_code == 200
-         print('Integration test passed: Root endpoint responds')
-         "
-       shell: bash
     - name: Run linting
       run: uv run ruff check .
       shell: bash
-     - name: Run integration test
-       run: |
-         uv run python -c "
-         from app import create_app
-         app = create_app()
-         client = app.test_client()
-         response = client.get(/
-         assert response.status_code == 200
-         print('Integration test passed: Root endpoint responds')
-         "
-       shell: bash
     - name: Run formatting check
       run: uv run black --check .
       shell: bash
-     - name: Run integration test
-       run: |
-         uv run python -c "
-         from app import create_app
-         app = create_app()
-         client = app.test_client()
-         response = client.get(/
-         assert response.status_code == 200
-         print('Integration test passed: Root endpoint responds')
-         "
-       shell: bash
     - name: Run unit tests with coverage
       run: PYTHONPATH=. uv run pytest tests/ --cov=vortai --cov-report=xml -W ignore::DeprecationWarning
       shell: bash
-     - name: Run integration test
-       run: |
-         uv run python -c "
-         from app import create_app
-         app = create_app()
-         client = app.test_client()
-         response = client.get(/
-         assert response.status_code == 200
-         print('Integration test passed: Root endpoint responds')
-         "
-       shell: bash
+    - name: Run integration test
+      run: |
+        uv run python -c "
+        from app import create_app
+        app = create_app()
+        client = app.test_client()
+        response = client.get('/')
+        assert response.status_code == 200
+        print('Integration test passed: Root endpoint responds')
+        "
+      shell: bash
     - name: Validate vercel.json
       run: python -m json.tool vercel.json > /dev/null && echo "vercel.json is valid"
       shell: bash
-     - name: Run integration test
-       run: |
-         uv run python -c "
-         from app import create_app
-         app = create_app()
-         client = app.test_client()
-         response = client.get(/
-         assert response.status_code == 200
-         print('Integration test passed: Root endpoint responds')
-         "
-       shell: bash
