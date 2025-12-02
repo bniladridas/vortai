@@ -13,7 +13,7 @@ format:
 	uv run black .
 
 test:
-	GEMINI_API_KEY=dummy 
+	GEMINI_API_KEY=dummy
 	uv run python -c "from app import create_app; app = create_app(); print('App created successfully')"
 
 run:
