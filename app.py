@@ -5,19 +5,12 @@
 # It creates and runs the app using the factory pattern.
 
 from dotenv import load_dotenv
-from flask import send_file
 from vortai import create_app
 
 # Load environment variables from .env file
 load_dotenv()
 
 app = create_app()
-
-
-# Serve React build for root route
-@app.route("/")
-def index():
-    return send_file("frontend/build/index.html")
 
 
 # This is for Vercel serverless deployment
