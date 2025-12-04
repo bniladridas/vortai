@@ -6,7 +6,7 @@
 
 __version__ = "0.0.4"
 
-from flask import Flask
+from flask import Flask, send_file
 from .sdk import GeminiAI
 from flask_cors import CORS
 
@@ -38,12 +38,7 @@ def create_app():
     # Serve React build for root route
     @app.route("/")
     def index():
-        from flask import send_file
-        import os
-
-        return send_file(
-            os.path.join(app.template_folder, "index.html")
-        )
+        return send_file(os.path.join(app.template_folder, "index.html"))
 
     @app.after_request
     def add_security_headers(response):
