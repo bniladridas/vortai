@@ -10,7 +10,6 @@ import os
 import uuid
 import tempfile
 import mimetypes
-from typing import Optional
 from google import genai as google_genai
 from google.genai import types
 
