@@ -1,0 +1,79 @@
+# Troubleshooting Guide
+
+This guide helps diagnose common issues with the Vortai application endpoints.
+
+## API Endpoint Diagnostics
+
+### General Debugging Steps
+
+1. **Check server logs**: Run the app with debug mode to see the full error traceback:
+   ```bash
+   uv run python static_app.py
+   ```
+   Look for the exception details in the console output.
+
+2. **Verify API key**: Ensure `GEMINI_API_KEY` is set in your `.env` file and the key is valid.
+
+3. **Common causes**:
+   - Invalid or missing Gemini API key
+   - Network connectivity issues
+   - Changes in Gemini API response format
+   - Model-specific parameters may not be supported (e.g., `thinking_config` for older models)
+   - API quota exhaustion (especially for image generation)
+
+4. **Test the endpoint**: Try a simple request to isolate the issue:
+   ```bash
+   curl -X POST http://localhost:5001/api/generate-with-thinking \
+    -H "Content-Type: application/json" \
+    -d '{"prompt": "Hello"}'
+   ```
+   Check the server console for the specific exception message to identify the root cause.
+
+### Endpoint-Specific Issues
+
+#### `/api/generate-with-thinking` (500 errors)
+
+- **Model not found**: Update model names in `vortai/models.py` to current Gemini API models
+- **Thinking config issues**: Ensure using Gemini 2.5 series models that support thinking mode
+- **Response parsing errors**: Check if API response structure has changed
+
+#### `/api/generate-image` (429/404 errors)
+
+- **Quota exhausted**: Free tier has limited image generation requests
+- **Model unavailable**: Image generation models may have restricted access
+- **Wait for quota reset**: Quotas typically reset every few minutes
+
+#### `/api/text-to-speech` (500 errors)
+
+- **gTTS library issues**: Check if gtts package is installed and network access available
+- **File system permissions**: Ensure temp directory is writable
+
+### Environment Setup
+
+Ensure your `.env` file contains:
+```
+GEMINI_API_KEY=your_valid_api_key_here
+```
+
+For Imagen models, also set:
+```
+GOOGLE_CLOUD_PROJECT=your_project_id
+GOOGLE_CLOUD_LOCATION=us-central1
+```
+
+### Model Configuration
+
+Current working models (as of December 2025):
+- **Text generation**: `gemini-2.5-flash`
+- **Thinking mode**: `gemini-2.5-pro` or `gemini-2.5-flash`
+- **URL context**: `gemini-2.5-flash`
+- **Image generation**: `imagen-4.0-generate-001` (requires Vertex AI setup) or Gemini models (limited by free tier)
+
+### Getting Help
+
+If issues persist:
+1. Check the [Gemini API documentation](https://ai.google.dev/gemini-api/docs)
+2. Monitor API usage at [Google AI Studio](https://ai.dev/usage)
+3. Review server logs for detailed error messages
+4. Test with different prompts/models to isolate the issue</content>
+<parameter name="filePath">docs/troubleshooting.md

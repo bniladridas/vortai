@@ -8,7 +8,6 @@ Gemini AI SDK - Simple interface for Google's Gemini AI models.
 import os
 import uuid
 import tempfile
-import mimetypes
 import requests
 from typing import Optional, Dict, Any
 import google.generativeai as genai
@@ -16,6 +15,7 @@ from gtts import gTTS
 from google import genai as google_genai
 from google.genai import types
 from . import models
+from .image_providers import ImageGenerationService
 
 
 class GeminiAI:
@@ -28,6 +28,7 @@ class GeminiAI:
             raise ValueError("GEMINI_API_KEY is required")
         genai.configure(api_key=api_key)
         self.cache = {}  # Simple in-memory cache
+        self.image_service = ImageGenerationService()
 
     def generate_text(self, prompt: str) -> str:
         """Generate text response from prompt."""
@@ -116,41 +117,6 @@ class GeminiAI:
         """Generate image and return file path."""
         if not prompt or len(prompt) > 5000:
             raise ValueError("Invalid prompt")
-        client = google_genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+
         model = models.IMAGE_MODEL
-        contents = [
-            types.Content(
-                role="user",
-                parts=[
-                    types.Part.from_text(text=f"Generate an image of: {prompt}"),
-                ],
-            ),
-        ]
-        generate_content_config = types.GenerateContentConfig(
-            response_modalities=["image", "text"],
-            response_mime_type="text/plain",
-        )
-        response = client.models.generate_content(
-            model=model,
-            contents=contents,
-            config=generate_content_config,
-        )
-        if (
-            response.candidates
-            and response.candidates[0].content
-            and response.candidates[0].content.parts
-        ):
-            for part in response.candidates[0].content.parts:
-                if part.inline_data:
-                    file_extension = mimetypes.guess_extension(
-                        part.inline_data.mime_type
-                    )
-                    filename = f"{uuid.uuid4()}{file_extension}"
-                    filepath = os.path.join(
-                        tempfile.gettempdir(), "gemini_images", filename
-                    )
-                    os.makedirs(os.path.dirname(filepath), exist_ok=True)
-                    with open(filepath, "wb") as f:
-                        f.write(part.inline_data.data)
-                    return filepath
-        raise ValueError("Failed to generate image")
+        return self.image_service.generate_image(prompt, model)

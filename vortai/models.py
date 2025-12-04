@@ -8,8 +8,8 @@ Centralized location for all model names used in the application.
 
 # Text generation models
 TEXT_MODEL = "gemini-2.5-flash"
-THINKING_MODEL = "gemini-2.5-flash-preview-05-20"
-URL_CONTEXT_MODEL = "gemini-2.5-flash-preview-05-20"
+THINKING_MODEL = "gemini-2.5-pro"
+URL_CONTEXT_MODEL = "gemini-2.5-pro"
 
 # Image generation model
-IMAGE_MODEL = "gemini-2.0-flash-exp-image-generation"
+IMAGE_MODEL = "imagen-4.0-generate-001"
