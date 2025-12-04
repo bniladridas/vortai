@@ -2189,7 +2189,6 @@ source = { editable = "." }
 dependencies = [
     { name = "flask", extra = ["async"] },
     { name = "flask-cors" },
-    { name = "google-cloud-aiplatform" },
     { name = "google-genai", version = "1.47.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "google-genai", version = "1.52.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "google-generativeai" },
@@ -2210,12 +2209,14 @@ dev = [
     { name = "typescript" },
     { name = "yamllint" },
 ]
+vertex-ai = [
+    { name = "google-cloud-aiplatform" },
+]
 
 [package.metadata]
 requires-dist = [
     { name = "flask", extras = ["async"], specifier = "==2.3.3" },
     { name = "flask-cors", specifier = "==4.0.2" },
-    { name = "google-cloud-aiplatform", specifier = ">=1.129.0" },
     { name = "google-genai", specifier = ">=0.1.0" },
     { name = "google-generativeai", specifier = ">=0.3.1" },
     { name = "gtts", specifier = "==2.5.4" },
@@ -2233,6 +2234,7 @@ dev = [
     { name = "typescript", specifier = ">=0.0.12" },
     { name = "yamllint" },
 ]
+vertex-ai = [{ name = "google-cloud-aiplatform", specifier = ">=1.129.0" }]
 
 [[package]]
 name = "websockets"
