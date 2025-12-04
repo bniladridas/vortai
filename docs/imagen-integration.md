@@ -47,7 +47,7 @@ IMAGE_MODEL = "imagen-4.0-generate-001"  # Imagen model
 
 **Added package:**
 ```bash
-uv add google-cloud-aiplatform
+uv add --group vertex-ai google-cloud-aiplatform
 ```
 
 #### 4. Documentation Updates (`docs/troubleshooting.md`)

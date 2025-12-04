@@ -69,11 +69,28 @@ Current working models (as of December 2025):
 - **URL context**: `gemini-2.5-flash`
 - **Image generation**: `imagen-4.0-generate-001` (requires Vertex AI setup) or Gemini models (limited by free tier)
 
+### Vertex AI / Imagen Issues
+
+1. **"Vertex AI not available"**: Install optional Vertex AI dependency:
+   ```bash
+   uv add --group vertex-ai google-cloud-aiplatform
+   ```
+
+2. **"GOOGLE_CLOUD_PROJECT required"**: Add to your `.env` file:
+   ```
+   GOOGLE_CLOUD_PROJECT=your_project_id
+   GOOGLE_CLOUD_LOCATION=us-central1
+   ```
+
+3. **Authentication errors**: Run `gcloud auth application-default login`
+
+4. **Billing required**: Enable billing on your Google Cloud project for Imagen models
+
 ### Getting Help
 
 If issues persist:
 1. Check the [Gemini API documentation](https://ai.google.dev/gemini-api/docs)
-2. Monitor API usage at [Google AI Studio](https://ai.dev/usage)
-3. Review server logs for detailed error messages
-4. Test with different prompts/models to isolate the issue</content>
-<parameter name="filePath">docs/troubleshooting.md
+2. Check the [Vertex AI documentation](https://cloud.google.com/vertex-ai/docs) for Imagen
+3. Monitor API usage at [Google AI Studio](https://ai.dev/usage)
+4. Review server logs for detailed error messages
+5. Test with different prompts/models to isolate the issue
