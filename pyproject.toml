@@ -3,7 +3,7 @@
 
 [project]
 name = "vortai"
-version = "0.0.4"
+version = "0.0.5"
 license = "MIT"
 requires-python = ">=3.9"
 dependencies = [
