@@ -81,6 +81,24 @@ class GeminiImageProvider(ImageProvider):
 class ImagenImageProvider(ImageProvider):
     """Image generation using Imagen via Vertex AI."""
 
+    def __init__(self):
+        """Initialize Vertex AI once for better performance."""
+        if VERTEX_AI_AVAILABLE:
+            # Get Vertex AI credentials from environment
+            project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
+            location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
+
+            if not project_id:
+                raise ValueError(
+                    "GOOGLE_CLOUD_PROJECT environment variable required for Imagen models"
+                )
+
+            # Initialize Vertex AI once
+            vertexai.init(project=project_id, location=location)
+
+        # Cache for model instances
+        self._model_cache = {}
+
     def generate_image(self, prompt: str, model: str) -> str:
         """Generate image using Imagen via Vertex AI."""
         if not VERTEX_AI_AVAILABLE:
@@ -88,20 +106,11 @@ class ImagenImageProvider(ImageProvider):
                 "Vertex AI not available. Install google-cloud-aiplatform package."
             )
 
-        # Get Vertex AI credentials from environment
-        project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
-        location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
+        # Get cached model or create new one
+        if model not in self._model_cache:
+            self._model_cache[model] = ImageGenerationModel.from_pretrained(model)
 
-        if not project_id:
-            raise ValueError(
-                "GOOGLE_CLOUD_PROJECT environment variable required for Imagen models"
-            )
-
-        # Initialize Vertex AI
-        vertexai.init(project=project_id, location=location)
-
-        # Create Imagen model
-        imagen_model = ImageGenerationModel.from_pretrained(model)
+        imagen_model = self._model_cache[model]
 
         # Generate image
         images = imagen_model.generate_images(
@@ -114,7 +123,7 @@ class ImagenImageProvider(ImageProvider):
 
         if images and len(images) > 0:
             filename = f"{uuid.uuid4()}.png"
-            filepath = os.path.join(tempfile.gettempdir(), "gemini_images", filename)
+            filepath = os.path.join(tempfile.gettempdir(), "generated_images", filename)
             os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
             # Save the image
