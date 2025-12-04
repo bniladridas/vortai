@@ -40,9 +40,6 @@ class GeminiImageProvider(ImageProvider):
 
     def generate_image(self, prompt: str, model: str) -> str:
         """Generate image using Gemini API."""
-        if not prompt or len(prompt) > 5000:
-            raise ValueError("Invalid prompt")
-
         contents = [
             types.Content(
                 role="user",
@@ -91,9 +88,6 @@ class ImagenImageProvider(ImageProvider):
                 "Vertex AI not available. Install google-cloud-aiplatform package."
             )
 
-        if not prompt or len(prompt) > 5000:
-            raise ValueError("Invalid prompt")
-
         # Get Vertex AI credentials from environment
         project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
         location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
@@ -141,6 +135,10 @@ class ImageGenerationService:
 
     def generate_image(self, prompt: str, model: str) -> str:
         """Generate image using the appropriate provider based on model name."""
+        # Centralize prompt validation to follow DRY principle
+        if not prompt or len(prompt) > 5000:
+            raise ValueError("Invalid prompt")
+
         if model.startswith("imagen-"):
             provider = self.providers.get("imagen")
             if not provider:
