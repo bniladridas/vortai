@@ -1,9 +1,14 @@
 import pytest
 import os
 
+os.environ["GEMINI_API_KEY"] = "dummy"
+
 
 def test_smoke():
-    from app import create_app
+    import os
+
+    os.environ["GEMINI_API_KEY"] = "dummy"
+    from vortai import create_app
 
     app = create_app()
     client = app.test_client()
