@@ -42,7 +42,7 @@ def create_app():
         import os
 
         return send_file(
-            os.path.join(os.path.dirname(__file__), "../frontend/build/index.html")
+            os.path.join(app.template_folder, "index.html")
         )
 
     @app.after_request
