@@ -100,7 +100,7 @@ class GeminiAI:
             tts.save(filepath)
             return filepath
         except Exception as e:
-            raise ValueError(f"Failed to generate speech: {e}")
+            raise ValueError(f"Failed to generate speech: {e}") from e
 
     def process_text_go(self, text: str) -> str:
         """Process text using Go service for normalization."""

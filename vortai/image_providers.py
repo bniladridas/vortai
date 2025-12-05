@@ -64,7 +64,7 @@ class GeminiImageProvider(ImageProvider):
             for part in response.candidates[0].content.parts:
                 if part.inline_data:
                     file_extension = mimetypes.guess_extension(
-                    part.inline_data.mime_type
+                        part.inline_data.mime_type
                     )
                     filename = f"{uuid.uuid4()}{file_extension}"
                     filepath = os.path.join(
