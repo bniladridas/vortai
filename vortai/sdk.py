@@ -59,7 +59,7 @@ class GeminiAI:
                 config={"thinking_config": {"include_thoughts": True}},
             )
         except Exception as e:
-            raise ValueError(f"Failed to generate text with thinking: {e}")
+            raise ValueError(f"Failed to generate text with thinking: {e}") from e
         main_response = response.text if hasattr(response, "text") else ""
         thinking_summary = []
         if hasattr(response, "candidates") and response.candidates:
