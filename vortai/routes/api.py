@@ -167,5 +167,5 @@ def process_text_go():
         return jsonify({"processed_text": processed_text})
 
     except Exception as e:
-        logging.error(f"Error in generate_response: {e}")
+        logging.error(f"Error in process_text_go: {e}")
         return jsonify({"error": "Internal server error"}), 500
