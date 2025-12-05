@@ -43,7 +43,7 @@ class GeminiAI:
             response = model.generate_content(prompt)
             result = response.text
         except Exception as e:
-            raise ValueError(f"Failed to generate text: {e}")
+            raise ValueError(f"Failed to generate text: {e}") from e
         self.cache[key] = result
         return result
 
