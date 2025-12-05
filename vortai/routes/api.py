@@ -117,7 +117,7 @@ def text_to_speech():
         )
 
     except Exception as e:
-        logging.error(f"Error in generate_response: {e}")
+        logging.error(f"Error in text_to_speech: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
 
