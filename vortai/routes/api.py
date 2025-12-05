@@ -69,7 +69,7 @@ def generate_response_with_thinking():
         return jsonify(result)
 
     except Exception as e:
-        logging.error(f"Error in generate_response: {e}")
+        logging.error(f"Error in generate_response_with_thinking: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
 
