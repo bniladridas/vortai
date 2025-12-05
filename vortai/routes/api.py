@@ -8,6 +8,7 @@ from flask import Blueprint, request, jsonify, send_file
 import os
 import tempfile
 import mimetypes
+import logging
 from ..sdk import GeminiAI
 
 
@@ -28,7 +29,7 @@ api_bp = Blueprint("api", __name__)
 TEMP_AUDIO_DIR = os.path.join(tempfile.gettempdir(), "gemini_tts")
 os.makedirs(TEMP_AUDIO_DIR, exist_ok=True)
 
-TEMP_IMAGE_DIR = os.path.join(tempfile.gettempdir(), "gemini_images")
+TEMP_IMAGE_DIR = os.path.join(tempfile.gettempdir(), "vortai_images")
 os.makedirs(TEMP_IMAGE_DIR, exist_ok=True)
 
 
@@ -48,7 +49,8 @@ def generate_response():
         return jsonify({"response": response})
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        logging.error(f"Error in generate_response: {e}")
+        return jsonify({"error": "Internal server error"}), 500
 
 
 @api_bp.route("/api/generate-with-thinking", methods=["POST"])
@@ -67,7 +69,8 @@ def generate_response_with_thinking():
         return jsonify(result)
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        logging.error(f"Error in generate_response: {e}")
+        return jsonify({"error": "Internal server error"}), 500
 
 
 @api_bp.route("/api/generate-with-url-context", methods=["POST"])
@@ -86,7 +89,8 @@ def generate_response_with_url_context():
         return jsonify({"response": response})
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        logging.error(f"Error in generate_response: {e}")
+        return jsonify({"error": "Internal server error"}), 500
 
 
 @api_bp.route("/api/text-to-speech", methods=["POST"])
@@ -113,7 +117,8 @@ def text_to_speech():
         )
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        logging.error(f"Error in generate_response: {e}")
+        return jsonify({"error": "Internal server error"}), 500
 
 
 @api_bp.route("/api/generate-image", methods=["POST"])
@@ -142,7 +147,8 @@ def generate_image():
         return send_file(filepath, mimetype=mime_type)
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        logging.error(f"Error in generate_response: {e}")
+        return jsonify({"error": "Internal server error"}), 500
 
 
 @api_bp.route("/api/process-text-go", methods=["POST"])
@@ -161,4 +167,5 @@ def process_text_go():
         return jsonify({"processed_text": processed_text})
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        logging.error(f"Error in generate_response: {e}")
+        return jsonify({"error": "Internal server error"}), 500

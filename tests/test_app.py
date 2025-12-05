@@ -182,7 +182,7 @@ def test_generate_image_success(mock_image_gen, client):
     """Test the image generation API with valid prompt."""
     # Use a path within the expected temp directory
     temp_image_path = os.path.join(
-        tempfile.gettempdir(), "gemini_images", "test_image.png"
+        tempfile.gettempdir(), "vortai_images", "test_image.png"
     )
     # Create the file so send_file works
     os.makedirs(os.path.dirname(temp_image_path), exist_ok=True)
@@ -241,7 +241,7 @@ def test_generate_api_exception_handling(mock_generate, client):
     assert response.status_code == 500
     data = response.get_json()
     assert "error" in data
-    assert "API Error" in data["error"]
+    assert data["error"] == "Internal server error"
 
 
 @patch("vortai.routes.api.ai.generate_text_with_thinking")
@@ -253,7 +253,7 @@ def test_thinking_api_exception_handling(mock_thinking, client):
     assert response.status_code == 500
     data = response.get_json()
     assert "error" in data
-    assert "Thinking API Error" in data["error"]
+    assert data["error"] == "Internal server error"
 
 
 @patch("vortai.routes.api.ai.generate_text_with_url_context")
@@ -265,7 +265,7 @@ def test_url_context_api_exception_handling(mock_url_context, client):
     assert response.status_code == 500
     data = response.get_json()
     assert "error" in data
-    assert "URL Context API Error" in data["error"]
+    assert data["error"] == "Internal server error"
 
 
 @patch("vortai.routes.api.ai.text_to_speech")
@@ -277,7 +277,7 @@ def test_tts_api_exception_handling(mock_tts, client):
     assert response.status_code == 500
     data = response.get_json()
     assert "error" in data
-    assert "TTS API Error" in data["error"]
+    assert data["error"] == "Internal server error"
 
 
 @patch("vortai.routes.api.ai.generate_image")
@@ -289,4 +289,4 @@ def test_image_api_exception_handling(mock_image_gen, client):
     assert response.status_code == 500
     data = response.get_json()
     assert "error" in data
-    assert "Image API Error" in data["error"]
+    assert data["error"] == "Internal server error"

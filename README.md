@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 
 [![Python Version](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-22%20passed-green.svg)](https://github.com/bniladridas/vortai/actions)
+[![Tests](https://img.shields.io/badge/tests-23%20passed-green.svg)](https://github.com/bniladridas/vortai/actions)
 
 Advanced AI platform with web search, URL analysis, text generation, image creation, and transparent thinking processes. Real-time web data access powered by Google Gemini API.
 

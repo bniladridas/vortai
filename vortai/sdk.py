@@ -9,6 +9,7 @@ import os
 import uuid
 import tempfile
 import requests
+import logging
 from typing import Optional, Dict, Any
 import google.generativeai as genai
 from gtts import gTTS
@@ -37,9 +38,12 @@ class GeminiAI:
         key = hash(prompt)
         if key in self.cache:
             return self.cache[key]
-        model = genai.GenerativeModel(models.TEXT_MODEL)
-        response = model.generate_content(prompt)
-        result = response.text
+        try:
+            model = genai.GenerativeModel(models.TEXT_MODEL)
+            response = model.generate_content(prompt)
+            result = response.text
+        except Exception as e:
+            raise ValueError(f"Failed to generate text: {e}")
         self.cache[key] = result
         return result
 
@@ -47,12 +51,15 @@ class GeminiAI:
         """Generate text with thinking summary."""
         if not prompt or len(prompt) > 5000:
             raise ValueError("Invalid prompt")
-        client = google_genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
-        response = client.models.generate_content(
-            model=models.THINKING_MODEL,
-            contents=prompt,
-            config={"thinking_config": {"include_thoughts": True}},
-        )
+        try:
+            client = google_genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+            response = client.models.generate_content(
+                model=models.THINKING_MODEL,
+                contents=prompt,
+                config={"thinking_config": {"include_thoughts": True}},
+            )
+        except Exception as e:
+            raise ValueError(f"Failed to generate text with thinking: {e}")
         main_response = response.text if hasattr(response, "text") else ""
         thinking_summary = []
         if hasattr(response, "candidates") and response.candidates:
@@ -69,25 +76,31 @@ class GeminiAI:
         """Generate text with URL context."""
         if not prompt or len(prompt) > 5000:
             raise ValueError("Invalid prompt")
-        client = google_genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
-        url_context_tool = types.Tool(url_context=types.UrlContext())
-        response = client.models.generate_content(
-            model=models.URL_CONTEXT_MODEL,
-            contents=prompt,
-            config={"tools": [url_context_tool]},
-        )
-        return response.text
+        try:
+            client = google_genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+            url_context_tool = types.Tool(url_context=types.UrlContext())
+            response = client.models.generate_content(
+                model=models.URL_CONTEXT_MODEL,
+                contents=prompt,
+                config={"tools": [url_context_tool]},
+            )
+            return response.text
+        except Exception as e:
+            raise ValueError(f"Failed to generate text with URL context: {e}")
 
     def text_to_speech(self, text: str) -> str:
         """Convert text to speech and return file path."""
         if not text or len(text) > 1000:
             raise ValueError("Invalid text")
-        filename = f"{uuid.uuid4()}.mp3"
-        filepath = os.path.join(tempfile.gettempdir(), "gemini_tts", filename)
-        os.makedirs(os.path.dirname(filepath), exist_ok=True)
-        tts = gTTS(text=text, lang="en", slow=False)
-        tts.save(filepath)
-        return filepath
+        try:
+            filename = f"{uuid.uuid4()}.mp3"
+            filepath = os.path.join(tempfile.gettempdir(), "gemini_tts", filename)
+            os.makedirs(os.path.dirname(filepath), exist_ok=True)
+            tts = gTTS(text=text, lang="en", slow=False)
+            tts.save(filepath)
+            return filepath
+        except Exception as e:
+            raise ValueError(f"Failed to generate speech: {e}")
 
     def process_text_go(self, text: str) -> str:
         """Process text using Go service for normalization."""
@@ -95,15 +108,16 @@ class GeminiAI:
             raise ValueError("No text provided")
 
         try:
-            # Call Go service running on localhost:8080
-            response = requests.post(
-                "http://localhost:8080/process", data={"text": text}, timeout=5
+            # Call Go service
+            go_service_url = os.environ.get(
+                "GO_SERVICE_URL", "http://localhost:8080/process"
             )
+            response = requests.post(go_service_url, data={"text": text}, timeout=5)
             response.raise_for_status()
             return response.text.strip()
         except requests.exceptions.RequestException as e:
             # Fallback to Python implementation if Go service is not available
-            print(f"Go service unavailable ({e}), using Python fallback")
+            logging.info(f"Go service unavailable ({e}), using Python fallback")
             return self._process_text_python(text)
 
     def _process_text_python(self, text: str) -> str:

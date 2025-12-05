@@ -64,11 +64,11 @@ class GeminiImageProvider(ImageProvider):
             for part in response.candidates[0].content.parts:
                 if part.inline_data:
                     file_extension = mimetypes.guess_extension(
-                        part.inline_data.mime_type
+                    part.inline_data.mime_type
                     )
                     filename = f"{uuid.uuid4()}{file_extension}"
                     filepath = os.path.join(
-                        tempfile.gettempdir(), "gemini_images", filename
+                        tempfile.gettempdir(), "vortai_images", filename
                     )
                     os.makedirs(os.path.dirname(filepath), exist_ok=True)
                     with open(filepath, "wb") as f:
@@ -122,7 +122,7 @@ class ImagenImageProvider(ImageProvider):
 
         if images and len(images) > 0:
             filename = f"{uuid.uuid4()}.png"
-            filepath = os.path.join(tempfile.gettempdir(), "generated_images", filename)
+            filepath = os.path.join(tempfile.gettempdir(), "vortai_images", filename)
             os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
             # Save the image
