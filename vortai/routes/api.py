@@ -89,7 +89,7 @@ def generate_response_with_url_context():
         return jsonify({"response": response})
 
     except Exception as e:
-        logging.error(f"Error in generate_response: {e}")
+        logging.error(f"Error in generate_response_with_url_context: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
 
