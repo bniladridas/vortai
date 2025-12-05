@@ -147,7 +147,7 @@ def generate_image():
         return send_file(filepath, mimetype=mime_type)
 
     except Exception as e:
-        logging.error(f"Error in generate_response: {e}")
+        logging.error(f"Error in generate_image: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
 
