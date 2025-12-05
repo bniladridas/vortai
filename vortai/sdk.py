@@ -86,7 +86,7 @@ class GeminiAI:
             )
             return response.text
         except Exception as e:
-            raise ValueError(f"Failed to generate text with URL context: {e}")
+            raise ValueError(f"Failed to generate text with URL context: {e}") from e
 
     def text_to_speech(self, text: str) -> str:
         """Convert text to speech and return file path."""
