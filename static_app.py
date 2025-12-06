@@ -16,8 +16,8 @@ def create_static_app():
     """Create Flask app for serving static web interface."""
     app = Flask(
         __name__,
-        static_folder="web/static",
-        template_folder="web/templates",
+        static_folder="deploy/static/static",
+        template_folder="deploy/static/templates",
     )
     CORS(app)  # Enable CORS for API calls
 
