@@ -27,10 +27,10 @@ def create_app():
     app = Flask(
         __name__,
         static_folder=os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "../frontend/build/static")
+            os.path.join(os.path.dirname(__file__), "../deploy/static/web/static")
         ),
         template_folder=os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "../frontend/build")
+            os.path.join(os.path.dirname(__file__), "../deploy/static/web")
         ),
     )
     CORS(app)  # Enable CORS for all routes
