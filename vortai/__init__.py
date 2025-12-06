@@ -39,9 +39,9 @@ def create_app():
     storage_uri = os.environ.get("REDIS_URL") or "memory://"
     limiter = Limiter(
         storage_uri=storage_uri,
-        key_func=lambda: request.remote_addr
-        if hasattr(request, "remote_addr")
-        else "unknown",
+        key_func=lambda: (
+            request.remote_addr if hasattr(request, "remote_addr") else "unknown"
+        ),
     )
     limiter.init_app(app)
 
