@@ -39,7 +39,9 @@ class GeminiAI:
             try:
                 self.cache = redis.from_url(redis_url)
             except redis.exceptions.RedisError as e:
-                logging.warning(f"Could not connect to Redis: {e}. Falling back to in-memory cache.")
+                logging.warning(
+                    f"Could not connect to Redis: {e}. Falling back to in-memory cache."
+                )
         if self.cache is None:
             self.cache = {}  # In-memory cache
         self.image_service = ImageGenerationService()

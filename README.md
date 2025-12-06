@@ -308,8 +308,10 @@ vortai/
 │   │   ├── api/        # Serverless API handlers
 │   │   └── vercel.json # Vercel config
 │   └── static/         # Static web interface (port 5001)
-│       ├── static/     # CSS, JS, images
-│       └── templates/  # HTML templates
+│       └── web/        # Web application files
+│           ├── index.html  # Main HTML file
+│           ├── static/     # CSS, JS, images
+│           └── templates/  # HTML templates
 ├── scripts/            # Development scripts
 │   ├── run-dev.sh     # Service management script
 │   └── setup.sh       # Environment setup script
