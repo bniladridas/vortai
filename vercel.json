@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "deploy/static/web/**",
+      "src": "deploy/static/**",
       "use": "@vercel/static"
     },
     {
@@ -13,7 +13,7 @@
   "routes": [
     {
       "src": "/",
-      "dest": "/index.html"
+      "dest": "/web/index.html"
     },
     {
       "src": "/api/generate",
@@ -37,7 +37,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/$1"
+      "dest": "/web/$1"
     }
   ]
 }
