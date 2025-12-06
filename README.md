@@ -29,7 +29,7 @@ Clone the repository and run the setup script:
 ```bash
 git clone https://github.com/bniladridas/vortai.git
 cd vortai
-./shell/setup.sh
+./scripts/setup.sh
 ```
 
 This installs all dependencies, builds extensions, and sets up the development environment.
@@ -40,19 +40,19 @@ Use the development manager to start services:
 
 ```bash
 # Start all services
-./shell/run-dev.sh all
+./scripts/run-dev.sh all
 
 # Start individual services
-./shell/run-dev.sh backend    # React Flask server (port 8000)
-./shell/run-dev.sh static     # Static web interface (port 5001)
-./shell/run-dev.sh frontend   # React development server (port 3000)
-./shell/run-dev.sh go         # Go text processor (port 8080)
+./scripts/run-dev.sh backend    # React Flask server (port 8000)
+./scripts/run-dev.sh static     # Static web interface (port 5001)
+./scripts/run-dev.sh frontend   # React development server (port 3000)
+./scripts/run-dev.sh go         # Go text processor (port 8080)
 
 # Start both web interfaces
-./shell/run-dev.sh interfaces # React (8000) + Static (5001)
+./scripts/run-dev.sh interfaces # React (8000) + Static (5001)
 
 # Show help
-./shell/run-dev.sh help
+./scripts/run-dev.sh help
 ```
 
 ### Manual Installation
@@ -100,7 +100,7 @@ cd frontend && npm install
 
    **Option D: Both Interfaces (Development)**
    ```bash
-   ./shell/run-dev.sh interfaces
+   ./scripts/run-dev.sh interfaces
    # React: http://localhost:8000
    # Static: http://localhost:5001
    ```
@@ -191,6 +191,7 @@ filepath = ai.generate_image("A serene mountain landscape at sunset")
 | `POST` | `/api/generate-with-url-context` | Text generation with web search context |
 | `POST` | `/api/text-to-speech` | Convert text to speech (MP3) |
 | `POST` | `/api/generate-image` | Generate images from text prompts |
+| `POST` | `/api/process-text-go` | Process and normalize text (with Go service fallback) |
 
 ### Request Format
 
@@ -302,15 +303,17 @@ vortai/
 │   ├── routes/         # Flask API endpoints
 │   └── extensions/     # Additional utilities
 ├── frontend/           # React TypeScript frontend (port 8000)
-├── web/                # Static HTML/CSS/JS interface (port 5001)
-│   ├── static/         # CSS, JS, images
-│   └── templates/      # HTML templates
-├── shell/              # Development scripts
+├── deploy/             # Deployment configurations
+│   ├── vercel/         # Vercel deployment files
+│   │   ├── api/        # Serverless API handlers
+│   │   └── vercel.json # Vercel config
+│   └── static/         # Static web interface (port 5001)
+│       ├── static/     # CSS, JS, images
+│       └── templates/  # HTML templates
+├── scripts/            # Development scripts
 │   ├── run-dev.sh     # Service management script
 │   └── setup.sh       # Environment setup script
-├── cython_ext/         # Cython performance extensions
-├── vortai/rust_ext/    # Rust performance extensions
-├── go/                 # Go services
+├── go/                 # Go services (optional)
 ├── tests/              # Comprehensive test suite
 └── docs/               # Documentation
 ```
@@ -328,12 +331,12 @@ make test          # Run all tests
 uv run pytest tests/ --cov=vortai  # With coverage
 
 # Development services
-./shell/run-dev.sh all           # Start all services
-./shell/run-dev.sh interfaces    # Both web interfaces (React + Static)
-./shell/run-dev.sh backend       # React Flask server (port 8000)
-./shell/run-dev.sh static        # Static web interface (port 5001)
-./shell/run-dev.sh frontend      # React development server (port 3000)
-./shell/run-dev.sh go           # Go processor only (port 8080)
+./scripts/run-dev.sh all           # Start all services
+./scripts/run-dev.sh interfaces    # Both web interfaces (React + Static)
+./scripts/run-dev.sh backend       # React Flask server (port 8000)
+./scripts/run-dev.sh static        # Static web interface (port 5001)
+./scripts/run-dev.sh frontend      # React development server (port 3000)
+./scripts/run-dev.sh go           # Go processor only (port 8080)
 
 # Building extensions
 uv run cythonize -i cython_ext/text_utils.pyx  # Build Cython
@@ -380,7 +383,7 @@ We welcome contributions! Please see our [contributing guidelines](CONTRIBUTING.
 1. Fork the repository
 2. Clone your fork: `git clone https://github.com/yourusername/vortai.git`
 3. Create a feature branch: `git checkout -b feature/your-feature`
-4. Install dependencies: `./shell/setup.sh`
+4. Install dependencies: `./scripts/setup.sh`
 5. Make your changes
 6. Add tests for new functionality
 7. Run tests: `make test`

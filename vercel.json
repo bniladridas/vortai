@@ -2,38 +2,38 @@
   "version": 2,
   "builds": [
     {
-      "src": "public/**",
+      "src": "deploy/static/web/**",
       "use": "@vercel/static"
     },
     {
-      "src": "api/index.py",
+      "src": "deploy/vercel/api/index.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/api/generate",
-      "dest": "/api/index.py?method=generate"
+      "dest": "/deploy/vercel/api/index.py?method=generate"
     },
     {
       "src": "/api/generate-with-thinking",
-      "dest": "/api/index.py?method=generate_with_thinking"
+      "dest": "/deploy/vercel/api/index.py?method=generate_with_thinking"
     },
     {
       "src": "/api/generate-with-url-context",
-      "dest": "/api/index.py?method=generate_with_url_context"
+      "dest": "/deploy/vercel/api/index.py?method=generate_with_url_context"
     },
     {
       "src": "/api/text-to-speech",
-      "dest": "/api/index.py?method=text_to_speech"
+      "dest": "/deploy/vercel/api/index.py?method=text_to_speech"
     },
     {
       "src": "/api/generate-image",
-      "dest": "/api/index.py?method=generate_image"
+      "dest": "/deploy/vercel/api/index.py?method=generate_image"
     },
     {
       "src": "/(.*)",
-      "dest": "/public/$1"
+      "dest": "/$1"
     }
   ]
 }

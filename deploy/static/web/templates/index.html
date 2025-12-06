@@ -1,0 +1,216 @@
+<!--
+SPDX-FileCopyrightText: Copyright (c) 2025 Niladri Das <bniladridas>
+SPDX-License-Identifier: MIT
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vortai</title>
+    <meta name="description" content="Advanced AI platform with web search, URL analysis, text generation, image creation, and transparent thinking processes. Real-time web data access powered by Google Gemini API.">
+    <meta name="keywords" content="AI, search, web search, URL analysis, Gemini, text generation, image generation, thinking AI, web scraping">
+    <meta name="author" content="Niladri Das">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gemini-ai-search.vercel.app/">
+    <meta property="og:title" content="AI Search Platform - Web Search, URL Analysis & AI Generation">
+    <meta property="og:description" content="Advanced AI platform with web search, URL analysis, text generation, image creation, and transparent thinking processes. Real-time web data access powered by Google Gemini API.">
+    <meta property="og:image" content="https://private-user-images.githubusercontent.com/125604915/452972528-377d0925-b15d-4ed4-8e85-ac9713bcc735.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDk0NjU1MTAsIm5iZiI6MTc0OTQ2NTIxMCwicGF0aCI6Ii8xMjU2MDQ5MTUvNDUyOTcyNTI4LTM3N2QwOTI1LWIxNWQtNGVkNC04ZTg1LWFjOTcxM2JjYzczNS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwNjA5JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDYwOVQxMDMzMzBaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT05MmY0ZDE5YWM3NDc0OGE2NTE2MGMwMjUxZTM3ZjA3N2MyNmJkYzUyYTFjNWUxZDMzM2Q1MDIyNDdiZjk0M2EzJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.WOkGC3Cg9p9trY0ybbOseh14JWM8FWFVTJc8nJ_3IPY">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://gemini-ai-search.vercel.app/">
+    <meta property="twitter:title" content="AI Search Platform - Web Search, URL Analysis & AI Generation">
+    <meta property="twitter:description" content="Advanced AI platform with web search, URL analysis, text generation, image creation, and transparent thinking processes. Real-time web data access powered by Google Gemini API.">
+    <meta property="twitter:image" content="https://private-user-images.githubusercontent.com/125604915/452972528-377d0925-b15d-4ed4-8e85-ac9713bcc735.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDk0NjU1MTAsIm5iZiI6MTc0OTQ2NTIxMCwicGF0aCI6Ii8xMjU2MDQ5MTUvNDUyOTcyNTI4LTM3N2QwOTI1LWIxNWQtNGVkNC04ZTg1LWFjOTcxM2JjYzczNS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwNjA5JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDYwOVQxMDMzMzBaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT05MmY0ZDE5YWM3NDc0OGE2NTE2MGMwMjUxZTM3ZjA3N2MyNmJkYzUyYTFjNWUxZDMzM2Q1MDIyNDdiZjk0M2EzJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.WOkGC3Cg9p9trY0ybbOseh14JWM8FWFVTJc8nJ_3IPY">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo_rounded.png') }}" sizes="32x32" style="border-radius: 50%;">
+    <link rel="alternate icon" href="{{ url_for('static', filename='img/logo_rounded.png') }}" sizes="32x32" style="border-radius: 50%;">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/marked/marked.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <!-- Header with logo and menu -->
+    <header class="app-header">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="ND Logo" class="logo">
+        </div>
+        <div class="header-controls">
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                <!-- Sun icon (dark theme) -->
+                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="5" stroke="currentColor"/>
+                    <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor"/>
+                    <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor"/>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor"/>
+                    <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor"/>
+                    <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor"/>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor"/>
+                </svg>
+                <!-- Moon icon (light theme) -->
+                <svg class="moon-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor"/>
+                </svg>
+            </button>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="1" fill="currentColor"/>
+                    <circle cx="19" cy="12" r="1" fill="currentColor"/>
+                    <circle cx="5" cy="12" r="1" fill="currentColor"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main content area -->
+    <main class="main-content">
+        <h1 id="ai-search-platform">Vortai</h1>
+
+        <!-- Unified Search Interface -->
+        <div class="unified-search">
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <div class="search-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="11" cy="11" r="8" stroke="currentColor"/>
+                            <path d="m21 21-4.35-4.35" stroke="currentColor"/>
+                        </svg>
+                    </div>
+                    <textarea class="unified-input" placeholder="Ask anything..." rows="1"></textarea>
+                    <div class="search-actions">
+                        <button class="clear-button" id="clear-button" style="display: none;">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor"/>
+                                <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor"/>
+                            </svg>
+                        </button>
+                        <button class="submit-button" id="submit-button">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M22 2L11 13" stroke="currentColor"/>
+                                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="input-suggestions" id="input-suggestions">
+                    <!-- Canvas suggestions (3) -->
+                    <div class="suggestion-chip tab-canvas" data-text="Explain quantum computing in simple terms">Explain quantum computing</div>
+                    <div class="suggestion-chip tab-canvas" data-text="Write a Python function to reverse a string">Write a Python function</div>
+                    <div class="suggestion-chip tab-canvas" data-text="Create a recipe for chocolate chip cookies">Chocolate chip cookie recipe</div>
+
+                    <!-- AI Thinking suggestions (3) -->
+                    <div class="suggestion-chip tab-thinking" data-text="Solve this step by step: If a train travels at 60 mph for 2 hours, how far does it go?">Solve step by step: train distance</div>
+                    <div class="suggestion-chip tab-thinking" data-text="Explain the water cycle with detailed reasoning">Explain water cycle with reasoning</div>
+                    <div class="suggestion-chip tab-thinking" data-text="Calculate compound interest: $1000 at 5% for 3 years">Calculate compound interest</div>
+
+                    <!-- Web search suggestions (3) -->
+                    <div class="suggestion-chip tab-url" data-text="Search https://en.wikipedia.org for information about quantum physics">Search Wikipedia: quantum physics</div>
+                    <div class="suggestion-chip tab-url" data-text="Find latest AI news from https://techcrunch.com and https://www.theverge.com">Latest AI news from tech sites</div>
+                    <div class="suggestion-chip tab-url" data-text="Check https://github.com for popular Python repositories this month">Popular Python repos on GitHub</div>
+
+                    <!-- Image generation suggestions (3) -->
+                    <div class="suggestion-chip tab-image" data-text="A beautiful sunset over mountains with vibrant colors">Beautiful sunset over mountains</div>
+                    <div class="suggestion-chip tab-image" data-text="A futuristic city with flying cars and neon lights">Futuristic city with flying cars</div>
+                    <div class="suggestion-chip tab-image" data-text="A cute cartoon robot with big eyes and a friendly smile">Cute cartoon robot</div>
+                </div>
+                <div class="search-tabs">
+                    <button class="search-tab active" data-mode="text" data-style="normal">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor"/>
+                            <line x1="9" y1="9" x2="15" y2="9" stroke="currentColor"/>
+                            <line x1="9" y1="15" x2="15" y2="15" stroke="currentColor"/>
+                        </svg>
+                        Canvas
+                    </button>
+                    <button class="search-tab" data-mode="text" data-style="thinking">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="3" stroke="currentColor"/>
+                            <circle cx="12" cy="5" r="1" fill="currentColor"/>
+                            <circle cx="19" cy="12" r="1" fill="currentColor"/>
+                            <circle cx="5" cy="12" r="1" fill="currentColor"/>
+                        </svg>
+                        AI Thinking
+                    </button>
+                    <button class="search-tab" data-mode="text" data-style="url-context">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor"/>
+                            <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor"/>
+                        </svg>
+                        Web search
+                    </button>
+                    <button class="search-tab" data-mode="image" data-style="normal">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor"/>
+                            <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+                            <polyline points="21,15 16,10 5,21" stroke="currentColor"/>
+                        </svg>
+                        Image generation
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Response containers -->
+        <div id="response" class="response-container"></div>
+        <div id="thinking" class="thinking-container"></div>
+
+        <!-- TTS Button -->
+        <button id="tts-button" class="tts-button" style="display: none;"><i class="fas fa-volume-up"></i></button>
+
+        <!-- Audio Player -->
+        <audio id="audio-player" class="audio-player" controls style="display: none;"></audio>
+
+        <!-- Image container -->
+        <div id="image-container" class="image-container" style="display: none;">
+            <img id="generated-image" alt="Generated image" style="display: none;">
+            <div id="image-message" style="display: none;"></div>
+        </div>
+        <div class="image-actions">
+            <a id="download-image" class="image-action" href="#" download="generated_image.png" style="display:none;">
+                <i class="fas fa-download"></i> Download
+            </a>
+            <button id="fullscreen-image" class="image-action" style="display:none;">
+                <i class="fas fa-expand"></i> Fullscreen
+            </button>
+        </div>
+    </main>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar-menu" id="sidebar-menu">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <button class="close-menu" id="close-menu" aria-label="Close menu">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor"/>
+                    <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor"/>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <p>Additional features and settings will be available here.</p>
+        </div>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menu-overlay"></div>
+
+    <!-- Cookie Notification -->
+    <div class="cookie-notification" id="cookie-notification">
+        <div class="cookie-text">
+            This website uses cookies to improve your experience. By using our site.
+        </div>
+        <button class="cookie-button" id="accept-cookies">Got it!</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

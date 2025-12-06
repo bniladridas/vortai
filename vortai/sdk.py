@@ -18,6 +18,11 @@ from google.genai import types
 from . import models
 from .image_providers import ImageGenerationService
 
+try:
+    import redis
+except ImportError:
+    redis = None
+
 
 class GeminiAI:
     """SDK for interacting with Gemini AI models."""
@@ -28,23 +33,39 @@ class GeminiAI:
         if not api_key:
             raise ValueError("GEMINI_API_KEY is required")
         genai.configure(api_key=api_key)
-        self.cache = {}  # Simple in-memory cache
+        self.cache = None
+        redis_url = os.environ.get("REDIS_URL")
+        if redis and redis_url:
+            try:
+                self.cache = redis.from_url(redis_url)
+            except Exception:
+                pass  # Fallback to dict
+        if self.cache is None:
+            self.cache = {}  # In-memory cache
         self.image_service = ImageGenerationService()
 
     def generate_text(self, prompt: str) -> str:
         """Generate text response from prompt."""
         if not prompt or len(prompt) > 5000:
             raise ValueError("Invalid prompt")
-        key = hash(prompt)
-        if key in self.cache:
-            return self.cache[key]
+        cache_key = str(hash(prompt))
+        if isinstance(self.cache, dict):
+            if cache_key in self.cache:
+                return self.cache[cache_key]
+        else:
+            cached = self.cache.get(cache_key)
+            if cached:
+                return cached.decode("utf-8") if isinstance(cached, bytes) else cached
         try:
             model = genai.GenerativeModel(models.TEXT_MODEL)
             response = model.generate_content(prompt)
             result = response.text
         except Exception as e:
             raise ValueError(f"Failed to generate text: {e}") from e
-        self.cache[key] = result
+        if isinstance(self.cache, dict):
+            self.cache[cache_key] = result
+        else:
+            self.cache.set(cache_key, result)
         return result
 
     def generate_text_with_thinking(self, prompt: str) -> Dict[str, Any]:

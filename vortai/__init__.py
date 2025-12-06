@@ -6,9 +6,10 @@
 
 __version__ = "0.0.5"
 
-from flask import Flask, send_file
+from flask import Flask, send_file, request
 from .sdk import GeminiAI
 from flask_cors import CORS
+from flask_limiter import Limiter
 
 __all__ = ["create_app", "GeminiAI", "main"]
 import os
@@ -34,10 +35,23 @@ def create_app():
     )
     CORS(app)  # Enable CORS for all routes
 
+    # Initialize rate limiter
+    storage_uri = os.environ.get("REDIS_URL") or "memory://"
+    limiter = Limiter(
+        storage_uri=storage_uri,
+        key_func=lambda: request.remote_addr
+        if hasattr(request, "remote_addr")
+        else "unknown",
+    )
+    limiter.init_app(app)
+
     # Register blueprints
     from .routes.api import api_bp
 
     app.register_blueprint(api_bp)
+
+    # Apply rate limiting to API routes
+    limiter.limit("100/hour")(api_bp)
 
     # Serve React build for root route
     @app.route("/")

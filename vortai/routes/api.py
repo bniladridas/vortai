@@ -4,15 +4,16 @@
 # This module defines the API routes for the Gemini AI Search application,
 # including text generation, thinking mode, URL context, TTS, and image generation.
 
-from flask import Blueprint, request, jsonify, send_file
+from flask import Blueprint, request, jsonify, send_file, Response
 import os
 import tempfile
 import mimetypes
 import logging
+from typing import Dict, Any
 from ..sdk import GeminiAI
 
 
-def is_safe_path(base_path, target_path):
+def is_safe_path(base_path: str, target_path: str) -> bool:
     """Check if target_path is within base_path to prevent path traversal."""
     try:
         return os.path.commonpath(
@@ -34,9 +35,9 @@ os.makedirs(TEMP_IMAGE_DIR, exist_ok=True)
 
 
 @api_bp.route("/api/generate", methods=["POST"])
-def generate_response():
+def generate_response() -> Response:
     try:
-        data = request.json
+        data: Dict[str, Any] = request.json or {}
         prompt = data.get("prompt", "").strip()
 
         if not prompt:
