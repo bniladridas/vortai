@@ -9,9 +9,19 @@ SPDX-License-Identifier: MIT
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://img.shields.io/badge/tests-23%20passed-green.svg)](https://github.com/bniladridas/vortai/actions)
 
-Advanced AI platform with web search, URL analysis, text generation, image creation, and transparent thinking processes. Real-time web data access powered by Google Gemini API.
+## Summary
 
-The full API documentation can be found in [docs/api-examples.md](docs/api-examples.md).
+Advanced AI platform combining web search, URL analysis, text generation, image creation, and transparent thinking processes. Powered by Google Gemini API for real-time web data access and intelligent responses.
+
+## Features
+
+- **Web Search Integration**: Real-time access to web data for contextual responses
+- **URL Analysis**: Deep analysis of web content and metadata
+- **Text Generation**: High-quality AI-powered text generation with thinking traces
+- **Image Creation**: AI-generated images from text prompts
+- **Multi-Interface Support**: React frontend, static web interface, and REST API
+- **Performance Optimizations**: Redis caching and optional Go/Rust extensions
+- **Security**: Rate limiting, CORS support, and secure file handling
 
 ## Installation
 
@@ -31,6 +41,63 @@ git clone https://github.com/bniladridas/vortai.git
 cd vortai
 ./scripts/setup.sh
 ```
+
+This installs all dependencies, builds extensions, and sets up the development environment.
+
+### Starting Services
+
+Use the development manager to start services:
+
+```bash
+# Start all services
+./scripts/run-dev.sh all
+
+# Start individual services
+./scripts/run-dev.sh backend    # React Flask server (port 8000)
+./scripts/run-dev.sh static     # Static web interface (port 5001)
+./scripts/run-dev.sh frontend   # React development server (port 3000)
+./scripts/run-dev.sh go         # Go text processor (port 8080)
+
+# Start both web interfaces
+./scripts/run-dev.sh interfaces # React (8000) + Static (5001)
+```
+
+## API Documentation
+
+The full API documentation can be found in [docs/api-examples.md](docs/api-examples.md).
+
+## Security
+
+Vortai implements several security measures:
+
+- **Rate Limiting**: API endpoints are protected with configurable rate limits (100 requests/hour per IP)
+- **CORS Support**: Configurable cross-origin resource sharing
+- **Input Validation**: All inputs are validated and sanitized
+- **Secure File Handling**: Temporary files are properly cleaned up
+- **Path Traversal Protection**: File access is restricted to safe directories
+
+For more details, see [docs/security/README.md](docs/security/README.md).
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Setup
+
+```bash
+# Run tests
+make test
+
+# Run linting
+make lint
+
+# Format code
+uv run black .
+```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 This installs all dependencies, builds extensions, and sets up the development environment.
 
