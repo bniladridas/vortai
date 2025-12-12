@@ -7,9 +7,10 @@ For advanced users, you can access the raw Google Gemini API directly:
 ```python
 import google.generativeai as genai
 from google import genai as google_genai
+import os
 
-# Configure API
-genai.configure(api_key="your-key")
+# Configure API (use environment variables for security)
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 # Text generation
 model = genai.GenerativeModel("gemini-2.5-flash")
@@ -17,13 +18,15 @@ response = model.generate_content("Hello world")
 print(response.text)
 
 # Thinking mode
-client = google_genai.Client(api_key="your-key")
+client = google_genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 response = client.models.generate_content(
-    model="gemini-2.5-flash-preview-05-20",
+    model="gemini-2.5-pro",
     contents="Explain photosynthesis",
     config={"thinking_config": {"include_thoughts": True}}
 )
 ```
+
+> **Security Note:** Never hardcode API keys in your code. Always use environment variables or secure credential management systems.
 
 ## URL Context Integration
 
