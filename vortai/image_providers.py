@@ -34,8 +34,8 @@ class ImageProvider:
 class GeminiImageProvider(ImageProvider):
     """Image generation using Gemini API."""
 
-    def __init__(self):
-        self.client = google_genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+    def __init__(self, api_key: str):
+        self.client = google_genai.Client(api_key=api_key)
 
     def generate_image(self, prompt: str, model: str) -> str:
         """Generate image using Gemini API."""
@@ -135,9 +135,9 @@ class ImagenImageProvider(ImageProvider):
 class ImageGenerationService:
     """Unified service for image generation across multiple providers."""
 
-    def __init__(self):
+    def __init__(self, api_key: str):
         self.providers = {
-            "gemini": GeminiImageProvider(),
+            "gemini": GeminiImageProvider(api_key),
             "imagen": ImagenImageProvider(),
         }
 
