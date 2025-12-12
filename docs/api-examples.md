@@ -70,6 +70,7 @@ Use the Interactions API for autonomous research:
 
 ```python
 from google import genai
+import time
 
 client = genai.Client(api_key="your-key")
 
@@ -81,7 +82,6 @@ interaction = client.interactions.create(
 )
 
 # Poll for results
-import time
 while True:
     status = client.interactions.get(interaction.name)
     if status.state.name == "COMPLETED":
