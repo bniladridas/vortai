@@ -290,3 +290,56 @@ def test_image_api_exception_handling(mock_image_gen, client):
     data = response.get_json()
     assert "error" in data
     assert data["error"] == "Internal server error"
+
+
+@patch("vortai.routes.api.ai.research_topic")
+def test_research_api_success(mock_research, client):
+    """Test the research API with valid topic."""
+    mock_response = {"report": "Mocked research report", "citations": []}
+    mock_research.return_value = mock_response
+
+    response = client.post("/api/research", json={"topic": "Test topic"})
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data == mock_response
+    mock_research.assert_called_once_with("Test topic")
+
+
+def test_research_api_missing_topic(client):
+    """Test the research API with missing topic."""
+    response = client.post("/api/research", json={})
+    assert response.status_code == 400
+    data = response.get_json()
+    assert "error" in data
+    assert "No topic provided" in data["error"]
+
+
+def test_research_api_empty_topic(client):
+    """Test the research API with empty topic."""
+    response = client.post("/api/research", json={"topic": ""})
+    assert response.status_code == 400
+    data = response.get_json()
+    assert "error" in data
+    assert "No topic provided" in data["error"]
+
+
+def test_research_api_topic_too_long(client):
+    """Test the research API with topic exceeding max length."""
+    long_topic = "a" * 5001  # Max is 5000
+    response = client.post("/api/research", json={"topic": long_topic})
+    assert response.status_code == 400
+    data = response.get_json()
+    assert "error" in data
+    assert "Topic too long" in data["error"]
+
+
+@patch("vortai.routes.api.ai.research_topic")
+def test_research_api_exception_handling(mock_research, client):
+    """Test exception handling in research API."""
+    mock_research.side_effect = Exception("Research API Error")
+
+    response = client.post("/api/research", json={"topic": "Test"})
+    assert response.status_code == 500
+    data = response.get_json()
+    assert "error" in data
+    assert data["error"] == "Internal server error"

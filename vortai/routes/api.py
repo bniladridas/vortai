@@ -170,3 +170,23 @@ def process_text_go():
     except Exception as e:
         logging.error(f"Error in process_text_go: {e}")
         return jsonify({"error": "Internal server error"}), 500
+
+
+@api_bp.route("/api/research", methods=["POST"])
+def research_topic():
+    try:
+        data = request.json
+        topic = data.get("topic", "").strip()
+
+        if not topic:
+            return jsonify({"error": "No topic provided"}), 400
+
+        if len(topic) > 5000:
+            return jsonify({"error": "Topic too long (max 5000 chars)"}), 400
+
+        result = ai.research_topic(topic)
+        return jsonify(result)
+
+    except Exception as e:
+        logging.error(f"Error in research_topic: {e}")
+        return jsonify({"error": "Internal server error"}), 500

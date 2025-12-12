@@ -10,8 +10,8 @@ import uuid
 import tempfile
 import requests
 import logging
+import time
 from typing import Optional, Dict, Any
-import google.generativeai as genai
 from gtts import gTTS
 from google import genai as google_genai
 from google.genai import types
@@ -29,10 +29,9 @@ class GeminiAI:
 
     def __init__(self, api_key: Optional[str] = None):
         """Initialize with API key."""
-        api_key = api_key or os.environ.get("GEMINI_API_KEY")
-        if not api_key:
+        self.api_key = api_key or os.environ.get("GEMINI_API_KEY")
+        if not self.api_key:
             raise ValueError("GEMINI_API_KEY is required")
-        genai.configure(api_key=api_key)
         self.cache = None
         redis_url = os.environ.get("REDIS_URL")
         if redis and redis_url:
@@ -44,7 +43,7 @@ class GeminiAI:
                 )
         if self.cache is None:
             self.cache = {}  # In-memory cache
-        self.image_service = ImageGenerationService()
+        self.image_service = ImageGenerationService(self.api_key)
 
     def generate_text(self, prompt: str) -> str:
         """Generate text response from prompt."""
@@ -59,8 +58,10 @@ class GeminiAI:
             if cached:
                 return cached.decode("utf-8") if isinstance(cached, bytes) else cached
         try:
-            model = genai.GenerativeModel(models.TEXT_MODEL)
-            response = model.generate_content(prompt)
+            client = google_genai.Client(api_key=self.api_key)
+            response = client.models.generate_content(
+                model=models.TEXT_MODEL, contents=prompt
+            )
             result = response.text
         except Exception as e:
             raise ValueError(f"Failed to generate text: {e}") from e
@@ -75,7 +76,7 @@ class GeminiAI:
         if not prompt or len(prompt) > 5000:
             raise ValueError("Invalid prompt")
         try:
-            client = google_genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+            client = google_genai.Client(api_key=self.api_key)
             response = client.models.generate_content(
                 model=models.THINKING_MODEL,
                 contents=prompt,
@@ -100,7 +101,7 @@ class GeminiAI:
         if not prompt or len(prompt) > 5000:
             raise ValueError("Invalid prompt")
         try:
-            client = google_genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+            client = google_genai.Client(api_key=self.api_key)
             url_context_tool = types.Tool(url_context=types.UrlContext())
             response = client.models.generate_content(
                 model=models.URL_CONTEXT_MODEL,
@@ -157,3 +158,33 @@ class GeminiAI:
 
         model = models.IMAGE_MODEL
         return self.image_service.generate_image(prompt, model)
+
+    def research_topic(self, topic: str) -> Dict[str, Any]:
+        """Perform multi-step research using Deep Research agent."""
+        if not topic or len(topic) > 5000:
+            raise ValueError("Invalid research topic")
+        try:
+            client = google_genai.Client(api_key=self.api_key)
+            interaction = client.interactions.create(
+                agent="deep-research-pro-preview-12-2025", input=topic, background=True
+            )
+            # Poll for completion
+            while True:
+                status = client.interactions.get(interaction.name)
+                if status.state.name == "COMPLETED":
+                    return {
+                        "report": status.output,
+                        "citations": getattr(status, "citations", []),
+                    }
+                elif status.state.name == "FAILED":
+                    raise ValueError(
+                        f"Research failed: {getattr(status, 'error', 'Unknown error')}"
+                    )
+                time.sleep(5)  # Wait 5 seconds before polling again
+        except Exception as e:
+            error_msg = str(e)
+            if "429" in error_msg or "quota" in error_msg.lower():
+                raise ValueError(
+                    "Research failed: Insufficient quota or access to Deep Research agent. Please check your API key permissions."
+                ) from e
+            raise ValueError(f"Failed to perform research: {e}") from e

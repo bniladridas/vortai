@@ -63,3 +63,59 @@ response = client.models.generate_content(
     config=generate_content_config,
 )
 ```
+
+## Deep Research (Multi-step Research Tasks)
+
+Use the Interactions API for autonomous research:
+
+```python
+from google import genai
+
+client = genai.Client(api_key="your-key")
+
+# Start research task
+interaction = client.interactions.create(
+    agent="deep-research-pro-preview-12-2025",
+    input="Research the history of Google TPUs.",
+    background=True
+)
+
+# Poll for results
+import time
+while True:
+    status = client.interactions.get(interaction.name)
+    if status.state.name == "COMPLETED":
+        print("Report:", status.output)
+        print("Citations:", getattr(status, 'citations', []))
+        break
+    elif status.state.name == "FAILED":
+        print("Failed:", getattr(status, 'error', 'Unknown error'))
+        break
+    time.sleep(5)
+```
+
+### API Endpoint
+
+POST `/api/research`
+
+**Request:**
+```bash
+curl -X POST http://localhost:8000/api/research \
+  -H "Content-Type: application/json" \
+  -d '{"topic": "History of artificial intelligence"}'
+```
+
+**Response:**
+```json
+{
+  "report": "Detailed research report...",
+  "citations": ["Source 1", "Source 2"]
+}
+```
+
+**Error (quota/access):**
+```json
+{
+  "error": "Internal server error"
+}
+```

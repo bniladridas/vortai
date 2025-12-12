@@ -38,6 +38,10 @@ vertex-ai = [
 [tool.ruff]
 line-length = 88
 target-version = "py312"
+exclude = [
+    "docs/",
+    "*.md",
+]
 
 [tool.black]
 line-length = 88
