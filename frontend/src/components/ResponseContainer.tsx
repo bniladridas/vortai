@@ -8,10 +8,13 @@ interface ResponseContainerProps {
 }
 
 const ResponseContainer: React.FC<ResponseContainerProps> = ({ content }) => {
+  // Handle empty content to avoid rendering empty containers
   if (!content) return null;
 
   return (
     <div className="response-container">
+      {/* Security: Content comes from trusted backend API responses.
+         If external/untrusted sources are added, consider rehype-sanitize for XSS protection. */}
       <div
         style={{
           lineHeight: '1.6',
@@ -19,6 +22,8 @@ const ResponseContainer: React.FC<ResponseContainerProps> = ({ content }) => {
           fontSize: '1rem'
         }}
       >
+        {/* Custom components provide consistent styling for markdown elements,
+           overriding default browser styles with Tailwind classes */}
         <ReactMarkdown
           components={{
             h1: ({ node, ...props }) => <h1 className="text-2xl font-bold my-4" {...props} />,
