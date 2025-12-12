@@ -13,3 +13,6 @@ URL_CONTEXT_MODEL = "gemini-2.5-pro"
 
 # Image generation model
 IMAGE_MODEL = "imagen-4.0-generate-001"
+
+# Deep Research agent
+DEEP_RESEARCH_MODEL = "deep-research-pro-preview-12-2025"
