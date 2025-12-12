@@ -305,18 +305,16 @@ def test_research_api_success(mock_research, client):
     mock_research.assert_called_once_with("Test topic")
 
 
-def test_research_api_missing_topic(client):
-    """Test the research API with missing topic."""
-    response = client.post("/api/research", json={})
-    assert response.status_code == 400
-    data = response.get_json()
-    assert "error" in data
-    assert "No topic provided" in data["error"]
-
-
-def test_research_api_empty_topic(client):
-    """Test the research API with empty topic."""
-    response = client.post("/api/research", json={"topic": ""})
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {},
+        {"topic": ""},
+    ],
+)
+def test_research_api_no_topic(client, payload):
+    """Test the research API with missing or empty topic."""
+    response = client.post("/api/research", json=payload)
     assert response.status_code == 400
     data = response.get_json()
     assert "error" in data
