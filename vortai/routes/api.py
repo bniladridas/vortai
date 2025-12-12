@@ -190,9 +190,10 @@ def research_topic():
     except ValueError as e:
         error_msg = str(e)
         if "quota" in error_msg.lower() or "access" in error_msg.lower():
-            return jsonify(
-                {"error": "Request rate limit exceeded or access denied"}
-            ), 429
+            return (
+                jsonify({"error": "Request rate limit exceeded or access denied"}),
+                429,
+            )
         elif "timeout" in error_msg.lower():
             return jsonify({"error": "Request timed out"}), 408
         else:
