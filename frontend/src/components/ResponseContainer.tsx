@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 // SPDX-FileCopyrightText: Copyright (c) 2025 Niladri Das <bniladridas>
 // SPDX-License-Identifier: MIT
 
@@ -25,6 +26,7 @@ const ResponseContainer: React.FC<ResponseContainerProps> = ({ content }) => {
         {/* Custom components provide consistent styling for markdown elements,
            overriding default browser styles with Tailwind classes */}
         <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
           components={{
             h1: ({ node, ...props }) => <h1 className="text-2xl font-bold my-4" {...props} />,
             h2: ({ node, ...props }) => <h2 className="text-xl font-bold my-3" {...props} />,
@@ -47,6 +49,13 @@ const ResponseContainer: React.FC<ResponseContainerProps> = ({ content }) => {
             strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
             em: ({ node, ...props }) => <em className="italic" {...props} />,
             a: ({ node, ...props }) => <a className="text-blue-600 hover:text-blue-800 underline" {...props} />,
+            table: ({ node, ...props }) => <table className="border-collapse border border-gray-300 my-2" {...props} />,
+            thead: ({ node, ...props }) => <thead className="bg-gray-100 dark:bg-gray-800" {...props} />,
+            tbody: ({ node, ...props }) => <tbody {...props} />,
+            tr: ({ node, ...props }) => <tr className="border-b border-gray-300" {...props} />,
+            th: ({ node, ...props }) => <th className="border border-gray-300 px-4 py-2 text-left font-bold" {...props} />,
+            td: ({ node, ...props }) => <td className="border border-gray-300 px-4 py-2" {...props} />,
+            del: ({ node, ...props }) => <del className="line-through" {...props} />,
           }}
         >
           {content}
