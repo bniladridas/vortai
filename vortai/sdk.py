@@ -168,8 +168,10 @@ class GeminiAI:
             interaction = client.interactions.create(
                 agent="deep-research-pro-preview-12-2025", input=topic, background=True
             )
-            # Poll for completion
-            while True:
+            # Poll for completion with a timeout
+            POLLING_INTERVAL = 5  # seconds
+            polling_attempts = 60  # 5 minutes (60 attempts * 5s interval)
+            for _ in range(polling_attempts):
                 status = client.interactions.get(interaction.name)
                 if status.state.name == "COMPLETED":
                     return {
@@ -180,7 +182,8 @@ class GeminiAI:
                     raise ValueError(
                         f"Research failed: {getattr(status, 'error', 'Unknown error')}"
                     )
-                time.sleep(5)  # Wait 5 seconds before polling again
+                time.sleep(POLLING_INTERVAL)
+            raise ValueError("Research task timed out after 5 minutes.")
         except Exception as e:
             error_msg = str(e)
             if "429" in error_msg or "quota" in error_msg.lower():
