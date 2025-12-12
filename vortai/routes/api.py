@@ -187,6 +187,16 @@ def research_topic():
         result = ai.research_topic(topic)
         return jsonify(result)
 
+    except ValueError as e:
+        error_msg = str(e)
+        if "quota" in error_msg.lower() or "access" in error_msg.lower():
+            return jsonify(
+                {"error": "Request rate limit exceeded or access denied"}
+            ), 429
+        elif "timeout" in error_msg.lower():
+            return jsonify({"error": "Request timed out"}), 408
+        else:
+            return jsonify({"error": "Bad request"}), 400
     except Exception as e:
         logging.error(f"Error in research_topic: {e}")
         return jsonify({"error": "Internal server error"}), 500
