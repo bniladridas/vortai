@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 // SPDX-FileCopyrightText: Copyright (c) 2025 Niladri Das <bniladridas>
 // SPDX-License-Identifier: MIT
 
@@ -17,8 +18,9 @@ const ResponseContainer: React.FC<ResponseContainerProps> = ({ content }) => {
           color: 'var(--text)',
           fontSize: '1rem'
         }}
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
+      >
+        <ReactMarkdown>{content}</ReactMarkdown>
+      </div>
     </div>
   );
 };
