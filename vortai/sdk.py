@@ -32,6 +32,7 @@ class GeminiAI:
         self.api_key = api_key or os.environ.get("GEMINI_API_KEY")
         if not self.api_key:
             raise ValueError("GEMINI_API_KEY is required")
+        self.client = google_genai.Client(api_key=self.api_key)
         self.cache = None
         redis_url = os.environ.get("REDIS_URL")
         if redis and redis_url:
@@ -58,8 +59,7 @@ class GeminiAI:
             if cached:
                 return cached.decode("utf-8") if isinstance(cached, bytes) else cached
         try:
-            client = google_genai.Client(api_key=self.api_key)
-            response = client.models.generate_content(
+            response = self.client.models.generate_content(
                 model=models.TEXT_MODEL, contents=prompt
             )
             result = response.text
@@ -76,8 +76,7 @@ class GeminiAI:
         if not prompt or len(prompt) > 5000:
             raise ValueError("Invalid prompt")
         try:
-            client = google_genai.Client(api_key=self.api_key)
-            response = client.models.generate_content(
+            response = self.client.models.generate_content(
                 model=models.THINKING_MODEL,
                 contents=prompt,
                 config={"thinking_config": {"include_thoughts": True}},
@@ -101,9 +100,8 @@ class GeminiAI:
         if not prompt or len(prompt) > 5000:
             raise ValueError("Invalid prompt")
         try:
-            client = google_genai.Client(api_key=self.api_key)
             url_context_tool = types.Tool(url_context=types.UrlContext())
-            response = client.models.generate_content(
+            response = self.client.models.generate_content(
                 model=models.URL_CONTEXT_MODEL,
                 contents=prompt,
                 config={"tools": [url_context_tool]},
@@ -164,15 +162,14 @@ class GeminiAI:
         if not topic or len(topic) > 5000:
             raise ValueError("Invalid research topic")
         try:
-            client = google_genai.Client(api_key=self.api_key)
-            interaction = client.interactions.create(
-                agent="deep-research-pro-preview-12-2025", input=topic, background=True
+            interaction = self.client.interactions.create(
+                agent=models.DEEP_RESEARCH_MODEL, input=topic, background=True
             )
             # Poll for completion with a timeout
             POLLING_INTERVAL = 5  # seconds
             polling_attempts = 60  # 5 minutes (60 attempts * 5s interval)
             for _ in range(polling_attempts):
-                status = client.interactions.get(interaction.name)
+                status = self.client.interactions.get(interaction.name)
                 if status.state.name == "COMPLETED":
                     return {
                         "report": status.output,
