@@ -4,12 +4,12 @@
 # This module defines the API routes for the Gemini AI Search application,
 # including text generation, thinking mode, URL context, TTS, and image generation.
 
-from flask import Blueprint, request, jsonify, send_file, after_this_request
+from flask import Blueprint, request, jsonify, send_file, after_this_request, Response
 import os
 import tempfile
 import mimetypes
 import logging
-from typing import Any, cast, Dict
+from typing import Any, cast, Dict, Tuple, Union
 from ..sdk import GeminiAI
 
 
@@ -35,7 +35,7 @@ os.makedirs(TEMP_IMAGE_DIR, exist_ok=True)
 
 
 @api_bp.route("/api/generate", methods=["POST"])
-def generate_response() -> Any:
+def generate_response() -> Union[Response, Tuple[Response, int]]:
     try:
         data = cast(Dict[str, Any], request.get_json() or {})
         prompt = data.get("prompt", "").strip()
@@ -55,7 +55,7 @@ def generate_response() -> Any:
 
 
 @api_bp.route("/api/generate-with-thinking", methods=["POST"])
-def generate_response_with_thinking() -> Any:
+def generate_response_with_thinking() -> Union[Response, Tuple[Response, int]]:
     try:
         data = cast(Dict[str, Any], request.get_json() or {})
         prompt = data.get("prompt", "").strip()
@@ -75,7 +75,7 @@ def generate_response_with_thinking() -> Any:
 
 
 @api_bp.route("/api/generate-with-url-context", methods=["POST"])
-def generate_response_with_url_context() -> Any:
+def generate_response_with_url_context() -> Union[Response, Tuple[Response, int]]:
     try:
         data = cast(Dict[str, Any], request.get_json() or {})
         prompt = data.get("prompt", "").strip()
@@ -95,7 +95,8 @@ def generate_response_with_url_context() -> Any:
 
 
 @api_bp.route("/api/text-to-speech", methods=["POST"])
-def text_to_speech() -> Any:
+def text_to_speech() -> Union[Response, Tuple[Response, int]]:
+    filepath = None
     try:
         data = cast(Dict[str, Any], request.get_json() or {})
         text = data.get("text", "").strip()
@@ -131,7 +132,7 @@ def text_to_speech() -> Any:
 
     except Exception as e:
         logging.error(f"Error in text_to_speech: {e}")
-        if "filepath" in locals():
+        if filepath is not None:
             try:
                 os.unlink(filepath)
             except OSError:
@@ -140,7 +141,8 @@ def text_to_speech() -> Any:
 
 
 @api_bp.route("/api/generate-image", methods=["POST"])
-def generate_image() -> Any:
+def generate_image() -> Union[Response, Tuple[Response, int]]:
+    filepath = None
     try:
         data = cast(Dict[str, Any], request.get_json() or {})
         prompt = data.get("prompt", "").strip()
@@ -178,7 +180,7 @@ def generate_image() -> Any:
 
     except Exception as e:
         logging.error(f"Error in generate_image: {e}")
-        if "filepath" in locals():
+        if filepath is not None:
             try:
                 os.unlink(filepath)
             except OSError:
@@ -187,7 +189,7 @@ def generate_image() -> Any:
 
 
 @api_bp.route("/api/process-text-go", methods=["POST"])
-def process_text_go() -> Any:
+def process_text_go() -> Union[Response, Tuple[Response, int]]:
     try:
         data = cast(Dict[str, Any], request.get_json() or {})
         text = data.get("text", "").strip()
@@ -207,7 +209,7 @@ def process_text_go() -> Any:
 
 
 @api_bp.route("/api/research", methods=["POST"])
-def research_topic() -> Any:
+def research_topic() -> Union[Response, Tuple[Response, int]]:
     try:
         data = cast(Dict[str, Any], request.get_json() or {})
         topic = data.get("topic", "").strip()
