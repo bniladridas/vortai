@@ -35,7 +35,13 @@ def create_app():
         ),
     )
     CORS(app)  # Enable CORS for all routes
-    app.wsgi_app = ProxyFix(app.wsgi_app)  # Fix for proxy headers
+
+    # Conditionally apply ProxyFix if PROXY_COUNT is set and > 0
+    proxy_count = int(os.environ.get("PROXY_COUNT", "0"))
+    if proxy_count > 0:
+        app.wsgi_app = ProxyFix(
+            app.wsgi_app, x_for=proxy_count, x_proto=proxy_count, x_host=proxy_count
+        )
 
     # Initialize rate limiter
     storage_uri = os.environ.get("REDIS_URL") or "memory://"
