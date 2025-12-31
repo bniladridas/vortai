@@ -10,6 +10,7 @@ from flask import Flask, send_file, request
 from .sdk import GeminiAI
 from flask_cors import CORS
 from flask_limiter import Limiter
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 __all__ = ["create_app", "GeminiAI", "main"]
 import os
@@ -34,6 +35,7 @@ def create_app():
         ),
     )
     CORS(app)  # Enable CORS for all routes
+    app.wsgi_app = ProxyFix(app.wsgi_app)  # Fix for proxy headers
 
     # Initialize rate limiter
     storage_uri = os.environ.get("REDIS_URL") or "memory://"
