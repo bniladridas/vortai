@@ -57,7 +57,7 @@ def generate_response() -> Any:
 @api_bp.route("/api/generate-with-thinking", methods=["POST"])
 def generate_response_with_thinking() -> Any:
     try:
-        data = request.get_json()
+        data = cast(Dict[str, Any], request.get_json() or {})
         prompt = data.get("prompt", "").strip()
 
         if not prompt:
@@ -77,7 +77,7 @@ def generate_response_with_thinking() -> Any:
 @api_bp.route("/api/generate-with-url-context", methods=["POST"])
 def generate_response_with_url_context() -> Any:
     try:
-        data = request.get_json()
+        data = cast(Dict[str, Any], request.get_json() or {})
         prompt = data.get("prompt", "").strip()
 
         if not prompt:
@@ -97,7 +97,7 @@ def generate_response_with_url_context() -> Any:
 @api_bp.route("/api/text-to-speech", methods=["POST"])
 def text_to_speech() -> Any:
     try:
-        data = request.get_json()
+        data = cast(Dict[str, Any], request.get_json() or {})
         text = data.get("text", "").strip()
 
         if not text:
@@ -142,7 +142,7 @@ def text_to_speech() -> Any:
 @api_bp.route("/api/generate-image", methods=["POST"])
 def generate_image() -> Any:
     try:
-        data = request.get_json()
+        data = cast(Dict[str, Any], request.get_json() or {})
         prompt = data.get("prompt", "").strip()
 
         if not prompt:
@@ -189,7 +189,7 @@ def generate_image() -> Any:
 @api_bp.route("/api/process-text-go", methods=["POST"])
 def process_text_go() -> Any:
     try:
-        data = request.get_json()
+        data = cast(Dict[str, Any], request.get_json() or {})
         text = data.get("text", "").strip()
 
         if not text:
@@ -209,7 +209,7 @@ def process_text_go() -> Any:
 @api_bp.route("/api/research", methods=["POST"])
 def research_topic() -> Any:
     try:
-        data = request.get_json()
+        data = cast(Dict[str, Any], request.get_json() or {})
         topic = data.get("topic", "").strip()
 
         if not topic:
