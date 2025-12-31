@@ -4,12 +4,12 @@
 # This module defines the API routes for the Gemini AI Search application,
 # including text generation, thinking mode, URL context, TTS, and image generation.
 
-from flask import Blueprint, request, jsonify, send_file, Response
+from flask import Blueprint, request, jsonify, send_file, after_this_request
 import os
 import tempfile
 import mimetypes
 import logging
-from typing import Dict, Any
+from typing import Any, cast, Dict
 from ..sdk import GeminiAI
 
 
@@ -35,9 +35,9 @@ os.makedirs(TEMP_IMAGE_DIR, exist_ok=True)
 
 
 @api_bp.route("/api/generate", methods=["POST"])
-def generate_response() -> Response:
+def generate_response() -> Any:
     try:
-        data: Dict[str, Any] = request.json or {}
+        data = cast(Dict[str, Any], request.get_json() or {})
         prompt = data.get("prompt", "").strip()
 
         if not prompt:
@@ -55,9 +55,9 @@ def generate_response() -> Response:
 
 
 @api_bp.route("/api/generate-with-thinking", methods=["POST"])
-def generate_response_with_thinking():
+def generate_response_with_thinking() -> Any:
     try:
-        data = request.json
+        data = request.get_json()
         prompt = data.get("prompt", "").strip()
 
         if not prompt:
@@ -75,9 +75,9 @@ def generate_response_with_thinking():
 
 
 @api_bp.route("/api/generate-with-url-context", methods=["POST"])
-def generate_response_with_url_context():
+def generate_response_with_url_context() -> Any:
     try:
-        data = request.json
+        data = request.get_json()
         prompt = data.get("prompt", "").strip()
 
         if not prompt:
@@ -95,9 +95,9 @@ def generate_response_with_url_context():
 
 
 @api_bp.route("/api/text-to-speech", methods=["POST"])
-def text_to_speech():
+def text_to_speech() -> Any:
     try:
-        data = request.json
+        data = request.get_json()
         text = data.get("text", "").strip()
 
         if not text:
@@ -112,6 +112,14 @@ def text_to_speech():
         if not is_safe_path(TEMP_AUDIO_DIR, filepath):
             return jsonify({"error": "Invalid file path"}), 400
 
+        @after_this_request
+        def cleanup(response):
+            try:
+                os.unlink(filepath)
+            except OSError:
+                pass
+            return response
+
         filename = os.path.basename(filepath)
         return send_file(
             filepath, mimetype="audio/mp3", as_attachment=True, download_name=filename
@@ -119,13 +127,18 @@ def text_to_speech():
 
     except Exception as e:
         logging.error(f"Error in text_to_speech: {e}")
+        if "filepath" in locals():
+            try:
+                os.unlink(filepath)
+            except OSError:
+                pass
         return jsonify({"error": "Internal server error"}), 500
 
 
 @api_bp.route("/api/generate-image", methods=["POST"])
-def generate_image():
+def generate_image() -> Any:
     try:
-        data = request.json
+        data = request.get_json()
         prompt = data.get("prompt", "").strip()
 
         if not prompt:
@@ -140,6 +153,14 @@ def generate_image():
         if not is_safe_path(TEMP_IMAGE_DIR, filepath):
             return jsonify({"error": "Invalid file path"}), 400
 
+        @after_this_request
+        def cleanup(response):
+            try:
+                os.unlink(filepath)
+            except OSError:
+                pass
+            return response
+
         # Detect mime type
         mime_type, _ = mimetypes.guess_type(filepath)
         if not mime_type:
@@ -149,13 +170,18 @@ def generate_image():
 
     except Exception as e:
         logging.error(f"Error in generate_image: {e}")
+        if "filepath" in locals():
+            try:
+                os.unlink(filepath)
+            except OSError:
+                pass
         return jsonify({"error": "Internal server error"}), 500
 
 
 @api_bp.route("/api/process-text-go", methods=["POST"])
-def process_text_go():
+def process_text_go() -> Any:
     try:
-        data = request.json
+        data = request.get_json()
         text = data.get("text", "").strip()
 
         if not text:
@@ -173,9 +199,9 @@ def process_text_go():
 
 
 @api_bp.route("/api/research", methods=["POST"])
-def research_topic():
+def research_topic() -> Any:
     try:
-        data = request.json
+        data = request.get_json()
         topic = data.get("topic", "").strip()
 
         if not topic:
