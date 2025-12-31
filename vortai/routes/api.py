@@ -110,6 +110,10 @@ def text_to_speech() -> Any:
 
         # Prevent path traversal
         if not is_safe_path(TEMP_AUDIO_DIR, filepath):
+            try:
+                os.unlink(filepath)
+            except OSError:
+                pass
             return jsonify({"error": "Invalid file path"}), 400
 
         @after_this_request
@@ -151,6 +155,10 @@ def generate_image() -> Any:
 
         # Prevent path traversal
         if not is_safe_path(TEMP_IMAGE_DIR, filepath):
+            try:
+                os.unlink(filepath)
+            except OSError:
+                pass
             return jsonify({"error": "Invalid file path"}), 400
 
         @after_this_request
